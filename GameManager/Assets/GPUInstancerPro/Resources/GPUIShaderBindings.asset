@@ -24,5 +24,16 @@ MonoBehaviour:
     extensionCode: 
     isUseOriginal: 0
     modifiedDate: 02/07/2026 17:48:18.584
+  - shaderName: TidalFlask/Foliage Wind URP Advanced U6-1
+    replacementShaderName: GPUInstancerPro/TidalFlask/Foliage Wind URP Advanced U6-1
+    extensionCode: 
+    isUseOriginal: 0
+    modifiedDate: 02/07/2026 18:19:28.507
+  - shaderName: TidalFlask/Foliage Wind URP Advanced Lit Emission U6-1
+    replacementShaderName: GPUInstancerPro/TidalFlask/Foliage Wind URP Advanced Lit
+      Emission U6-1
+    extensionCode: 
+    isUseOriginal: 0
+    modifiedDate: 02/07/2026 19:23:26.891
   stripObjectMotionVectorVariants: 0
   stripPerInstanceLightProbeVariants: 0

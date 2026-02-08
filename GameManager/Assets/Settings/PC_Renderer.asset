@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: SymmetryBreak.TastyGrassShader::SymmetryBreakStudio.TastyGrassShader.TastyGrassShaderGlobalSettings
   m_Active: 1
   customRenderingMaterial: {fileID: 0}
-  bakingTimeBudget: 12
+  bakingTimeBudget: 4
   densityScale: 2
-  lodFalloffExponent: 5.61
-  lodScale: 1.17
-  lodCutoff: 0.581
-  chunkSize: 64
+  lodFalloffExponent: 10
+  lodScale: 0.09
+  lodCutoff: 0.333
+  chunkSize: 16
   enableShadows: 1
   xrPassthroughAlphaFix: 0
   ChunkCullTimeout: 1
