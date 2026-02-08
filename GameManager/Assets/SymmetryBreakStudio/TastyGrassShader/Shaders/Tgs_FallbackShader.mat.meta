@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2ec5d8a0281c51e4887c98b5fc205ec5
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/Shaders/Tgs_FallbackShader.mat
+  uploadId: 843138

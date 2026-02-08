@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: b10c2061e9a4bed408e30b4f061be8d0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/Examples/Shared/Scripts/TgsCustomInstanceExample.cs
+  uploadId: 843138

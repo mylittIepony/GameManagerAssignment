@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 344efd30727a97c408f59f1bb0b4bfe1
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/ScriptableObjects/GrassSettings/Tgs_ClutterPebbles.asset
+  uploadId: 843138

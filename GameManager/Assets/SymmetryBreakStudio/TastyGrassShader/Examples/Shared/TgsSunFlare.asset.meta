@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: dfe60e7e4030f974fbdadda942c1afe2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/Examples/Shared/TgsSunFlare.asset
+  uploadId: 843138

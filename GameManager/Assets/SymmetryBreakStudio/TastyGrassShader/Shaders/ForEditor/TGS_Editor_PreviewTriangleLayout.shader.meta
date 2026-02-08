@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 440a1404a8cb86547b920675018b5887
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/Shaders/ForEditor/TGS_Editor_PreviewTriangleLayout.shader
+  uploadId: 843138

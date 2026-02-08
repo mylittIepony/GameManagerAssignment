@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: adf8c4259919a2148b2c6ef234bc46e4
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/ScriptableObjects/WindSettings/Tgs_LightBreeze.asset
+  uploadId: 843138

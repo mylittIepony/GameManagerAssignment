@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4c1922184d7f30a4cb7b12f9518ed093
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/Examples/Shared/TerrainLayers/Tgs_DandelionsLayer.terrainlayer
+  uploadId: 843138

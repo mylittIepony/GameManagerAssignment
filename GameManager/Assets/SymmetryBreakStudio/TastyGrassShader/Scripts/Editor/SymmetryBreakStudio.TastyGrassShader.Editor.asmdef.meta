@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: de7dfac38daf7a8498a24811b84ea29f
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/Scripts/Editor/SymmetryBreakStudio.TastyGrassShader.Editor.asmdef
+  uploadId: 843138

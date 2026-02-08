@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7221eb7b196f765418c0493425db52b2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/Examples/Shared/TerrainLayers/Tgs_Leafs.terrainlayer
+  uploadId: 843138

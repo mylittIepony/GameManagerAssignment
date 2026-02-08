@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 998c5b8d923f01649928f5d0bb9693ea
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/Examples/Shared/TerrainLayers/Tgs_TexturedGrassLayer_TundraDryLumpy.terrainlayer
+  uploadId: 843138

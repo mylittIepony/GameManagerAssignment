@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b22c93fc69457e340a9f7cc785325806
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/Examples/Shared/TerrainLayers/Tgs_UntexturedGrassLayer_Swampy.terrainlayer
+  uploadId: 843138

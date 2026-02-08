@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 528d0ce7936e84b4586d0ec12ebbfe07
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 8574412962073106934
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/Examples/Shared/TerrainLayers/Tgs_SandGravel.terrainlayer
+  uploadId: 843138

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 88dcf650ba0b1bf4faf4d722829914bd
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/Examples/Shared/Prefabs/TGS_ExampleScene_Shared.prefab
+  uploadId: 843138

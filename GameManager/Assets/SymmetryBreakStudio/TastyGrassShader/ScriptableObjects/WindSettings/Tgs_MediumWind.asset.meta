@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 60d950ae3d888a14fbc5b3b16f8e128c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/ScriptableObjects/WindSettings/Tgs_MediumWind.asset
+  uploadId: 843138

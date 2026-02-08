@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 323fc249bbd0899478383b56e1bec7d6
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/ScriptableObjects/GrassSettings/Tgs_FlowersLupineFlowers.asset
+  uploadId: 843138

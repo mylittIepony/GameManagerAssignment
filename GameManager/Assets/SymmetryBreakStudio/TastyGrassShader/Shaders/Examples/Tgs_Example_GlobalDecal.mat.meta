@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6b1517d4adec62242b0c98287e13ba70
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/Shaders/Examples/Tgs_Example_GlobalDecal.mat
+  uploadId: 843138

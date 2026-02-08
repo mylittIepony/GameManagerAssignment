@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1fedb04a22c8957408a8afaf428f7ed6
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 279246
+  packageName: Tasty Grass Shader (URP/HDRP 3D/VR)
+  packageVersion: 2.5.2
+  assetPath: Assets/SymmetryBreakStudio/TastyGrassShader/ScriptableObjects/WindSettings/Tgs_LightGusts.asset
+  uploadId: 843138
