@@ -826,7 +826,22 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
+    Android: 
+    EmbeddedLinux: 
+    GameCoreScarlett: 
+    GameCoreXboxOne: 
+    Kepler: 
+    LinuxHeadlessSimulation: 
+    Nintendo Switch: 
+    Nintendo Switch 2: 
+    PS4: 
+    PS5: 
+    QNX: 
     Standalone: ATMOSPHERIC_HEIGHT_FOG
+    VisionOS: 
+    WebGL: 
+    XboxOne: 
+    tvOS: 
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
