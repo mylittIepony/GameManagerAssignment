@@ -96,8 +96,8 @@ MonoBehaviour:
   tipRounding: 0.0392
   windIntensityScale: 2
   windPivotOffset: 0
-  smoothness: 0
+  smoothness: 0.151
   occlusionByHeight: 0.545
   colliderInfluence: 0.715
-  baseLodFactor: 3
+  baseLodFactor: 1
   castShadows: 1

@@ -558,32 +558,22 @@ namespace SymmetryBreakStudio.TastyGrassShader
 
             // Setup the heightmap for the compute shader.
             // =============================================================================================================
-
-            // NULL CHECK - Use fallback if texture destroyed
-            Texture heightmapToUse = recipe.HeightmapTexture != null && recipe.HeightmapTexture
-                ? recipe.HeightmapTexture
-                : Texture2D.blackTexture;
-            tgsComputeShader.SetTexture(csTerrainPassId, Heightmap, heightmapToUse);
+            tgsComputeShader.SetTexture(csTerrainPassId, Heightmap, recipe.HeightmapTexture);
 
             tgsComputeShader.SetVector(HeightmapResolutionXy,
-                new Vector2(heightmapToUse.width, heightmapToUse.height));
+                new Vector2(recipe.HeightmapTexture.width, recipe.HeightmapTexture.height));
 
-            // NULL CHECK - Use fallback if texture destroyed
-            Texture densityMapToUse = recipe.DistributionTexture != null && recipe.DistributionTexture
-                ? recipe.DistributionTexture
-                : Texture2D.whiteTexture;
-            tgsComputeShader.SetTexture(csTerrainPassId, DensityMap, densityMapToUse);
-
+            tgsComputeShader.SetTexture(csTerrainPassId, DensityMap, recipe.DistributionTexture);
             tgsComputeShader.SetVector(DensityMapChannelMask, recipe.DistributionTextureChannelMask);
             tgsComputeShader.SetInt(DensityUseChannelMask, recipe.DistributionByTextureEnabled ? 1 : 0);
 
             {
                 float heightmapPxToDensityMapUvX =
-                    densityMapToUse.width / (float)heightmapToUse.width /
-                    densityMapToUse.width;
+                    recipe.DistributionTexture.width / (float)recipe.HeightmapTexture.width /
+                    recipe.DistributionTexture.width;
                 float heightmapPxToDensityMapUvY =
-                    densityMapToUse.height / (float)heightmapToUse.height /
-                    densityMapToUse.height;
+                    recipe.DistributionTexture.height / (float)recipe.HeightmapTexture.height /
+                    recipe.DistributionTexture.height;
 
                 tgsComputeShader.SetVector(DensityMapUvFromHeightmapIdx,
                     new Vector4(

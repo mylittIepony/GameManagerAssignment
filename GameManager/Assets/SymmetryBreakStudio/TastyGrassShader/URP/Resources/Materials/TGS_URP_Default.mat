@@ -9,8 +9,6 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: TGS_URP_Default
   m_Shader: {fileID: 4800000, guid: b253cdef6d5ad4641a16fabfeeb5d3ad, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHATEST_ON
   m_InvalidKeywords:
@@ -28,7 +26,6 @@ Material:
     MotionVector: User
   disabledShaderPasses:
   - TransparentBackface
-  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -149,4 +146,3 @@ Material:
     - _PositionBoundMax: {r: 0, g: 0, b: 0, a: 0}
     - _PositionBoundMin: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
-  m_AllowLocking: 1
