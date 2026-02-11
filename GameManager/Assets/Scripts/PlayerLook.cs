@@ -7,11 +7,8 @@ public class FirstPersonLook_NIS : MonoBehaviour
     public float mouseSensitivity = 2f;
     public float gamepadSensitivity = 100f;
 
-
     public float minVerticalAngle = -90f;
     public float maxVerticalAngle = 90f;
-    public float disabledMinVerticalAngle = -45f;
-    public float disabledMaxVerticalAngle = 45f;
 
 
     public Transform playerBody;
@@ -96,11 +93,6 @@ public class FirstPersonLook_NIS : MonoBehaviour
         playerBody.Rotate(Vector3.up * _mouseXAccumulated, Space.Self);
 
         _verticalRotation += _mouseYAccumulated;
-
-        float minAngle = enabled ? minVerticalAngle : disabledMinVerticalAngle;
-        float maxAngle = enabled ? maxVerticalAngle : disabledMaxVerticalAngle;
-
-        _verticalRotation = Mathf.Clamp(_verticalRotation, minAngle, maxAngle);
 
         transform.localRotation = Quaternion.Euler(_verticalRotation, 0f, 0f);
 
