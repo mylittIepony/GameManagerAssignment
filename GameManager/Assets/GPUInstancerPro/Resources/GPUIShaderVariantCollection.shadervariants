@@ -48,3 +48,13 @@ ShaderVariantCollection:
         passType: 0
       - keywords: _USEEMISSIONTEXTURE_ON _USEVERTEXCOLORFORWIND_ON
         passType: 0
+  - first: {fileID: 4800000, guid: 852fdc483267026409a08d23ae384f4e, type: 3}
+    second:
+      variants:
+      - keywords: LOD_FADE_CROSSFADE
+        passType: 0
+  - first: {fileID: 4800000, guid: 986b3c850a1780548884668e64e5fb70, type: 3}
+    second:
+      variants:
+      - keywords: LOD_FADE_CROSSFADE
+        passType: 0

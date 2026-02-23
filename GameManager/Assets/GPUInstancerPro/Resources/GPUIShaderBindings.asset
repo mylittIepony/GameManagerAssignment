@@ -35,5 +35,16 @@ MonoBehaviour:
     extensionCode: 
     isUseOriginal: 0
     modifiedDate: 02/10/2026 12:26:37.780
+  - shaderName: TidalFlask/Triplanar TopProject URP Advanced U6-1
+    replacementShaderName: GPUInstancerPro/TidalFlask/Triplanar TopProject URP Advanced
+      U6-1
+    extensionCode: 
+    isUseOriginal: 0
+    modifiedDate: 02/22/2026 22:43:33.078
+  - shaderName: Universal Render Pipeline/Lit
+    replacementShaderName: GPUInstancerPro/Universal Render Pipeline/Lit
+    extensionCode: 
+    isUseOriginal: 0
+    modifiedDate: 02/22/2026 22:43:33.638
   stripObjectMotionVectorVariants: 0
   stripPerInstanceLightProbeVariants: 0

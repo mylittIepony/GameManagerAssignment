@@ -107,7 +107,7 @@ namespace SymmetryBreakStudio.TastyGrassShader.Example
             GUILayout.Label(
                 $"Baking Status: {bakingPercentage:F}%\n({TgsGlobalStatus.instances} Chunks Active, {TgsGlobalStatus.instancesReady} Chunks Ready)");
 
-            UniversalRenderPipelineAsset activeUrp = (UniversalRenderPipelineAsset)GraphicsSettings.renderPipelineAsset;
+            UniversalRenderPipelineAsset activeUrp = (UniversalRenderPipelineAsset)GraphicsSettings.defaultRenderPipeline;
 
             GUILayout.Space(12.0f);
             GUILayout.Label("<b>Tasty Grass Shader - Settings</b>");

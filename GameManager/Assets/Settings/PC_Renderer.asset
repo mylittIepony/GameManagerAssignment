@@ -16,9 +16,9 @@ MonoBehaviour:
   customRenderingMaterial: {fileID: 0}
   bakingTimeBudget: 4
   densityScale: 2
-  lodFalloffExponent: 10
-  lodScale: 0.09
-  lodCutoff: 0.333
+  lodFalloffExponent: 3.18
+  lodScale: 0.89
+  lodCutoff: 0.01
   chunkSize: 16
   enableShadows: 1
   xrPassthroughAlphaFix: 0
