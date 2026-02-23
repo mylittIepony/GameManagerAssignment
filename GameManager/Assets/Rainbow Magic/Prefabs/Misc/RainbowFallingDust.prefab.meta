@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: d1437d8484a7fad4bbd5da8b31a86a86
+timeCreated: 1524315794
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 118088
+  packageName: Rainbow Magic
+  packageVersion: 1.1
+  assetPath: Assets/Rainbow Magic/Prefabs/Misc/RainbowFallingDust.prefab
+  uploadId: 692636

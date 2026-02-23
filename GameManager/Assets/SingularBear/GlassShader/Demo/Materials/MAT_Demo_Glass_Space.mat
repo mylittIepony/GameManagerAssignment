@@ -36,15 +36,14 @@ Material:
   - _SB_DISTORTION
   - _SB_FINGERPRINTS_SLOT2
   - _SB_FRESNEL
+  - _SB_HEAT_HAZE
   - _SB_IOR
   - _SB_IRIDESCENCE
   - _SB_MAGNIFY
-  - _SB_QUALITY_HIGH
+  - _SB_QUALITY_LOW
   - _SB_RECEIVE_SHADOWS
   - _SB_REFRACTION
-  - _SB_RIM
   - _SB_SPARKLE
-  - _SB_SPECULAR
   m_InvalidKeywords:
   - _BLENDMODE_STANDARD
   - _CHROMATIC_DISPERSION
@@ -264,7 +263,7 @@ Material:
     - _BlurRadius: 0.001
     - _BlurSamples: 8
     - _BlurStrength: 1
-    - _Brightness: 1.358
+    - _Brightness: 1.81
     - _BumpScale: 0.503
     - _CastShadows: 0
     - _CausticsDistortion: 0.449
@@ -282,6 +281,7 @@ Material:
     - _Contrast: 1.169
     - _CrackDepth: 2
     - _CrackEmission: 1.131
+    - _CrackSharpness: 1
     - _CrackWidth: 0.1
     - _Cull: 2
     - _CullMode: 2
@@ -328,7 +328,7 @@ Material:
     - _DirtUseEdgeNoise: 1
     - _DirtVariationScale: 2
     - _DirtWorldHeight: 0
-    - _Distortion: 0.418
+    - _Distortion: 0.444
     - _DitherScale: 0.942
     - _DitherStrength: 0.991
     - _DstBlend: 10
@@ -350,7 +350,7 @@ Material:
     - _DustTriplanarSharpness: 4
     - _EdgeDarkeningDistance: 1
     - _EdgeDarkeningPower: 2
-    - _EdgeDarkeningStrength: 0.182
+    - _EdgeDarkeningStrength: 0.874
     - _EdgeGlowPower: 5.29
     - _EdgeGlowStrength: 2.396
     - _EmissionIntensity: 0.11
@@ -449,13 +449,13 @@ Material:
     - _FresnelAffectsAlpha: 0
     - _FresnelAffectsRefraction: 0
     - _FresnelBias: 0
-    - _FresnelIntensity: 0.441
+    - _FresnelIntensity: 1.72
     - _FresnelInvert: 0
     - _FresnelMainLightSaturation: 0.415
     - _FresnelMainLightScale: 1.316
     - _FresnelMax: 1
-    - _FresnelMin: 0
-    - _FresnelPower: 1.32
+    - _FresnelMin: 0.266
+    - _FresnelPower: 3.63
     - _FresnelRimOnly: 0
     - _FresnelScale: 1
     - _FresnelStrength: 1.869
@@ -464,39 +464,39 @@ Material:
     - _GlossyReflections: 0
     - _GrimeEdgeAmount: 0.5
     - _GrimeGradient: 0.3
-    - _HeatHazeScale: 1
-    - _HeatHazeSpeed: 3.74
-    - _HeatHazeStrength: 0.0286
+    - _HeatHazeScale: 31.2
+    - _HeatHazeSpeed: 9.79
+    - _HeatHazeStrength: 0.1
     - _HideInterior: 0
     - _IOR: 1.481
     - _IOROrigin: 1.202
     - _IOROriginPreset: 2
-    - _IndexOfRefraction: 1
+    - _IndexOfRefraction: 0.168
     - _InnerGlowFalloff: 2
     - _InnerGlowPower: 2
     - _InnerGlowStrength: 0
     - _InteriorFade: 0.373
     - _InteriorFogDensity: 0.22
-    - _IridescenceScale: 1.44
-    - _IridescenceShift: 1
-    - _IridescenceSpeed: 0.482
-    - _IridescenceStrength: 1.069
+    - _IridescenceScale: 2.8
+    - _IridescenceShift: 0.476
+    - _IridescenceSpeed: 0.41
+    - _IridescenceStrength: 1.99
     - _IridescenceThickness: 1.5
     - _MagnifyFalloff: 0.403
     - _MagnifyRadius: 0.35
-    - _MagnifyStrength: -0.05
-    - _MainTint: 1
+    - _MagnifyStrength: -0.29
+    - _MainTint: 0.084
     - _MatteFinish: 0
-    - _Metallic: 1
+    - _Metallic: 0
     - _MicroRoughness: 0.1608
     - _MobileMode: 0
     - _NormalIntensity: 0.5
     - _NormalStrength: 0
     - _OcclusionStrength: 0.388
-    - _Opacity: 1
+    - _Opacity: 0.762
     - _Parallax: 0.005
     - _PixelateAmount: 0
-    - _PixelateSize: 100
+    - _PixelateSize: 34.2
     - _PolishLevel: 0.566
     - _ProceduralCrackDensity: 12.49
     - _ProceduralCrackSeed: 12.1
@@ -534,17 +534,17 @@ Material:
     - _RefractionPower: 1
     - _RefractionStrength: 1
     - _RefractionType: 1
-    - _RimIntensity: 1.241
+    - _RimIntensity: 0
     - _RimMax: 0.939
     - _RimMin: 0
-    - _RimPower: 10
+    - _RimPower: 0.1
     - _RimStrength: 0.5
     - _RippleAmplitude: 0.0357
     - _RippleDecay: 10
     - _RippleFrequency: 100
     - _RippleSpeed: 1.8
-    - _SB_Quality: 2
-    - _Saturation: 1
+    - _SB_Quality: 0
+    - _Saturation: 1.5
     - _ScratchDepth: 1
     - _ScratchIntensity: 0
     - _ScratchStrength: 0.2
@@ -553,7 +553,7 @@ Material:
     - _ShadowStrength: 1
     - _ShatterDistortion: 0
     - _Shininess: 1
-    - _Smoothness: 0.444
+    - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SmudgeIntensity: 0
     - _SmudgeStrength: 0.3
@@ -561,7 +561,7 @@ Material:
     - _SparkleContrast: 2
     - _SparkleDensity: 0.5
     - _SparkleIntensity: 10
-    - _SparkleScale: 135.7
+    - _SparkleScale: 200
     - _SparkleSize: 1.77
     - _SparkleSpeed: 1.66
     - _SparkleThreshold: 0.5
@@ -569,7 +569,7 @@ Material:
     - _SpecularFresnel: 0
     - _SpecularHardness: 0.444
     - _SpecularHighlights: 1
-    - _SpecularIntensity: 1.79
+    - _SpecularIntensity: 0
     - _SpecularMode: 2
     - _SpecularOpacity: 1
     - _SpecularPower: 42.3
@@ -660,7 +660,7 @@ Material:
     - _UseFalloffOpacity: 0
     - _UseFingerprints: 0
     - _UseFresnel: 1
-    - _UseHeatHaze: 0
+    - _UseHeatHaze: 1
     - _UseHideInterior: 0
     - _UseIOR: 1
     - _UseImperfections: 0
@@ -676,13 +676,13 @@ Material:
     - _UseRainTriplanar: 0
     - _UseReflection: 0
     - _UseRefraction: 1
-    - _UseRim: 1
+    - _UseRim: 0
     - _UseRipple: 0
     - _UseSlot2: 1
     - _UseSlot3: 0
     - _UseSlot4: 0
     - _UseSparkle: 1
-    - _UseSpecular: 1
+    - _UseSpecular: 0
     - _UseSurfaceNoise: 0
     - _UseSwirl: 0
     - _UseTIR: 0

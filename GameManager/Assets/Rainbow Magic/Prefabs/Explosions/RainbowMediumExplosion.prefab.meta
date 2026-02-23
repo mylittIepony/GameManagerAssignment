@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 447760a7dd6e7a543a8d0d9710a152b1
+timeCreated: 1519133992
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 118088
+  packageName: Rainbow Magic
+  packageVersion: 1.1
+  assetPath: Assets/Rainbow Magic/Prefabs/Explosions/RainbowMediumExplosion.prefab
+  uploadId: 692636

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 8369cab733d6cc24ca151bd2caabf0d3
+timeCreated: 1524672891
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 118088
+  packageName: Rainbow Magic
+  packageVersion: 1.1
+  assetPath: Assets/Rainbow Magic/Materials/clouds.mat
+  uploadId: 692636

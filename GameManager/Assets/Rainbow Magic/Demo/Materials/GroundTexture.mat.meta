@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: ca5e20101b73a7f43bf2f2bbf385787b
+timeCreated: 1517421758
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 118088
+  packageName: Rainbow Magic
+  packageVersion: 1.1
+  assetPath: Assets/Rainbow Magic/Demo/Materials/GroundTexture.mat
+  uploadId: 692636

@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 7310800cb58f6bc4fb6f4e57abdd7891
+timeCreated: 1523363934
+licenseType: Store
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 118088
+  packageName: Rainbow Magic
+  packageVersion: 1.1
+  assetPath: Assets/Rainbow Magic/Scripts/RainbowMagicSoundSpawn.cs
+  uploadId: 692636

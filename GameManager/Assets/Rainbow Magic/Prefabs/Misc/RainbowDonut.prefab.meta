@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: bcbcf32baa36a2e45b559f3398615102
+timeCreated: 1523968334
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 118088
+  packageName: Rainbow Magic
+  packageVersion: 1.1
+  assetPath: Assets/Rainbow Magic/Prefabs/Misc/RainbowDonut.prefab
+  uploadId: 692636

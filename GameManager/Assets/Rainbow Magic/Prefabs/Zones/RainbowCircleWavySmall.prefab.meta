@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 3e5d104ec483ff54a9c0483458071d83
+timeCreated: 1517508839
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 118088
+  packageName: Rainbow Magic
+  packageVersion: 1.1
+  assetPath: Assets/Rainbow Magic/Prefabs/Zones/RainbowCircleWavySmall.prefab
+  uploadId: 692636

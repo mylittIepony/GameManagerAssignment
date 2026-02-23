@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: c419346bcfe2aa7498f1b3dfdf699d85
+timeCreated: 1523364416
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 118088
+  packageName: Rainbow Magic
+  packageVersion: 1.1
+  assetPath: Assets/Rainbow Magic/Sound/Prefabs/Missile/ShootMediumSND.prefab
+  uploadId: 692636

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 7742633d34863594a920e1f684dc1fce
+timeCreated: 1517671323
+licenseType: Store
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 118088
+  packageName: Rainbow Magic
+  packageVersion: 1.1
+  assetPath: Assets/Rainbow Magic/Prefabs/Orbs/RainbowLightningOrb.prefab
+  uploadId: 692636
