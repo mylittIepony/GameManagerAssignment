@@ -162,6 +162,7 @@ GameObject:
   - component: {fileID: 1869282044563062424}
   - component: {fileID: 3711132473330398252}
   - component: {fileID: 7067930913611985363}
+  - component: {fileID: 8980818703668711707}
   m_Layer: 0
   m_Name: Liquid
   m_TagString: Untagged
@@ -178,8 +179,8 @@ Transform:
   m_GameObject: {fileID: 6757595896021036965}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.8455, y: 3.4, z: -3.5253}
-  m_LocalScale: {x: 2.2289, y: 12.3603, z: 14.377139}
+  m_LocalPosition: {x: 9.5204, y: 3.4, z: -3.5253}
+  m_LocalScale: {x: 0.87907815, y: 12.3603, z: 14.377139}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6484734293907274905}
@@ -281,8 +282,27 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.4448181
-  m_Center: {x: -0.5153474, y: 0, z: -0.024712807}
+  m_Radius: 0.4994705
+  m_Center: {x: 0.37848175, y: 0, z: -0.024712807}
+--- !u!114 &8980818703668711707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6757595896021036965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab39f714f981775478ff08a9216c9681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScenePortal
+  targetScene: SampleScene
+  portalID: 
+  playerTag: Player
+  requireInteract: 0
+  interactMapName: 
+  interactActionName: Interact
+  showLoadingScreen: 0
 --- !u!1001 &35229267120358327
 PrefabInstance:
   m_ObjectHideFlags: 0
