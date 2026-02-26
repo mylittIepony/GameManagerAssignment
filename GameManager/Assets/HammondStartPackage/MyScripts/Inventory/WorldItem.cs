@@ -43,10 +43,10 @@ public class WorldItem : MonoBehaviour, ISaveable
         _sceneName = _homeScene;
         _originalPosition = transform.position;
         _originalRotation = transform.rotation;
-        _isInWorld = false; 
+        _isInWorld = false;
 
         if (string.IsNullOrEmpty(uniqueID))
-            uniqueID = gameObject.name;
+            uniqueID = $"{gameObject.name}_{_homeScene}_{_originalPosition.x:F2}_{_originalPosition.y:F2}_{_originalPosition.z:F2}";
 
         SaveManager.Register(this);
     }
@@ -155,6 +155,38 @@ public class WorldItem : MonoBehaviour, ISaveable
     {
         _isForeignDrop = true;
         _sceneName = gameObject.scene.name;
+    }
+
+    public void ResetToWorld()
+    {
+        if (!_pickedUp) return;
+
+        _pickedUp = false;
+        _isForeignDrop = false;
+        _isInWorld = true;
+        _sceneName = _homeScene;
+
+        if (gameObject.scene.name == "DontDestroyOnLoad")
+        {
+            Scene home = SceneManager.GetSceneByName(_homeScene);
+            if (home.IsValid() && home.isLoaded)
+                SceneManager.MoveGameObjectToScene(gameObject, home);
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
+        }
+
+        transform.position = _originalPosition;
+        transform.rotation = _originalRotation;
+        gameObject.SetActive(false);
+
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null) { rb.isKinematic = false; rb.WakeUp(); }
+
+        foreach (var col in GetComponentsInChildren<Collider>())
+            col.enabled = true;
     }
 
     IEnumerator RegisterWithCarrierNextFrame()

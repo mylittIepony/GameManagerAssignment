@@ -1,12 +1,19 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
+public interface IPauseable
+{
+    void OnPause();
+    void OnResume();
+}
 
 public class PauseManager : MonoBehaviour
 {
-
     public static PauseManager Instance { get; private set; }
     public static bool IsPaused { get; private set; }
 
@@ -16,43 +23,34 @@ public class PauseManager : MonoBehaviour
     [Header("UI")]
     public GameObject gameplayCanvas;
     public GameObject pauseCanvas;
+    public Button saveButton;
 
     [Header("behaviour")]
     public bool freezeTime = true;
     public bool pauseAudio = true;
-    public bool manageCursor = true;
     public bool allowPause = true;
 
-    [Header("specific component control")]
-    public MonoBehaviour[] disableWhilePaused;
+    [Header("scene rules")]
+    public string[] gameplayScenes;
 
     [Header("events")]
     public UnityEvent onPause;
     public UnityEvent onResume;
 
-
     InputAction _fallbackAction;
-    CursorLockMode _savedLockMode;
-    bool _savedCursorVisible;
     float _savedTimeScale;
     readonly HashSet<Object> _pauseLocks = new HashSet<Object>();
 
-
-
     void Awake()
     {
-
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
         IsPaused = false;
         EnsureInputAction();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void OnEnable()
@@ -67,70 +65,47 @@ public class PauseManager : MonoBehaviour
         action.performed -= OnPauseInput;
         action.Disable();
 
-        if (IsPaused)
-            ForceResume();
+        if (IsPaused) ForceResume();
     }
 
     void OnDestroy()
     {
-        if (Instance == this)
-            Instance = null;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        if (Instance == this) Instance = null;
     }
 
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (IsPaused) ForceResume();
+        UpdateCanvasForScene();
+    }
 
     void EnsureInputAction()
     {
         if (pauseAction != null) return;
-
         _fallbackAction = new InputAction("Pause", InputActionType.Button, "<Keyboard>/escape");
     }
 
-    InputAction GetPauseAction()
-    {
-        return pauseAction != null ? pauseAction.action : _fallbackAction;
-    }
+    InputAction GetPauseAction() => pauseAction != null ? pauseAction.action : _fallbackAction;
 
-    void OnPauseInput(InputAction.CallbackContext ctx)
-    {
-        Toggle();
-    }
-
+    void OnPauseInput(InputAction.CallbackContext ctx) => Toggle();
 
     public void Toggle()
     {
-        if (IsPaused)
-            Resume();
-        else
-            Pause();
+        if (IsPaused) Resume();
+        else Pause();
     }
-
 
     public void Pause()
     {
-        if (IsPaused) return;
-        if (!allowPause) return;
-        if (_pauseLocks.Count > 0) return;
-
+        if (IsPaused || !allowPause || _pauseLocks.Count > 0) return;
         ApplyPause(true);
     }
-
 
     public void Resume()
     {
         if (!IsPaused) return;
         ApplyPause(false);
-    }
-
-
-    public void AcquirePauseLock(Object key)
-    {
-        _pauseLocks.Add(key);
-        if (IsPaused) Resume();
-    }
-
-    public void ReleasePauseLock(Object key)
-    {
-        _pauseLocks.Remove(key);
     }
 
     public void ForceResume()
@@ -139,7 +114,13 @@ public class PauseManager : MonoBehaviour
         ApplyPause(false);
     }
 
+    public void AcquirePauseLock(Object key)
+    {
+        _pauseLocks.Add(key);
+        if (IsPaused) Resume();
+    }
 
+    public void ReleasePauseLock(Object key) => _pauseLocks.Remove(key);
 
     void ApplyPause(bool pause)
     {
@@ -147,54 +128,34 @@ public class PauseManager : MonoBehaviour
 
         if (freezeTime)
         {
-            if (pause)
-            {
-                _savedTimeScale = Time.timeScale;
-                Time.timeScale = 0f;
-            }
-            else
-            {
-                Time.timeScale = _savedTimeScale > 0f ? _savedTimeScale : 1f;
-            }
+            if (pause) { _savedTimeScale = Time.timeScale; Time.timeScale = 0f; }
+            else Time.timeScale = _savedTimeScale > 0f ? _savedTimeScale : 1f;
         }
 
+        if (pauseAudio) AudioListener.pause = pause;
 
-        if (pauseAudio)
-            AudioListener.pause = pause;
-
-        if (gameplayCanvas != null) gameplayCanvas.SetActive(!pause);
+        bool isGameplay = IsGameplayScene();
+        if (gameplayCanvas != null) gameplayCanvas.SetActive(isGameplay && !pause);
         if (pauseCanvas != null) pauseCanvas.SetActive(pause);
 
-
-
-        if (disableWhilePaused != null)
+        foreach (var p in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IPauseable>())
         {
-            foreach (MonoBehaviour mb in disableWhilePaused)
-            {
-                if (mb != null)
-                    mb.enabled = !pause;
-            }
+            if (pause) p.OnPause();
+            else p.OnResume();
         }
 
-        if (manageCursor)
-        {
-            if (pause)
-            {
-                _savedLockMode = Cursor.lockState;
-                _savedCursorVisible = Cursor.visible;
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-            else
-            {
-                Cursor.lockState = _savedLockMode;
-                Cursor.visible = _savedCursorVisible;
-            }
-        }
-
-        if (pause)
-            onPause?.Invoke();
-        else
-            onResume?.Invoke();
+        if (pause) onPause?.Invoke();
+        else onResume?.Invoke();
     }
+
+    void UpdateCanvasForScene()
+    {
+        bool isGameplay = IsGameplayScene();
+        if (gameplayCanvas != null) gameplayCanvas.SetActive(isGameplay && !IsPaused);
+        if (pauseCanvas != null) pauseCanvas.SetActive(false);
+        if (saveButton != null) saveButton.gameObject.SetActive(isGameplay);
+    }
+
+    bool IsGameplayScene() => gameplayScenes != null &&
+        System.Array.IndexOf(gameplayScenes, SceneManager.GetActiveScene().name) >= 0;
 }

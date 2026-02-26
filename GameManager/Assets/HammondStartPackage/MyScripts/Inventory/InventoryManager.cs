@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class InventoryManager : MonoBehaviour, ISaveable
 {
@@ -38,6 +39,8 @@ public class InventoryManager : MonoBehaviour, ISaveable
 
     void Awake()
     {
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
 
         Instance = this;
@@ -66,7 +69,17 @@ public class InventoryManager : MonoBehaviour, ISaveable
     {
         SaveManager.Unregister(this);
         if (Instance == this) Instance = null;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (inventoryCanvas == null) return;
+        bool isGameplay = scene.name != "Title";
+        inventoryCanvas.SetActive(isGameplay && (alwaysShowInventory || _inventoryOpen));
+    }
+
+
 
     void FindCarrier()
     {
@@ -417,5 +430,14 @@ public class InventoryManager : MonoBehaviour, ISaveable
         yield return null;
         FindCarrier();
         UpdateHeldItem();
+    }
+
+    public void ResetInventory()
+    {
+        _carrier?.ClearHeldItem();
+        _activeSlotIndex = -1;
+        IsHoldingInventoryItem = false;
+        InitializeSlots();
+        UpdateSlotVisuals();
     }
 }

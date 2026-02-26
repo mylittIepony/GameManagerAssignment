@@ -74,6 +74,7 @@ public class SaveManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (scene.name == "Title") return;
         StartCoroutine(LoadSaveablesNextFrame(scene.name));
     }
 
@@ -137,19 +138,6 @@ public class SaveManager : MonoBehaviour
             return $"Slot {slot + 1} - {timestamp}";
 
         return $"Slot {slot + 1} — {dict.Count} entries";
-    }
-
-    public static void DeleteSlot(int slot)
-    {
-        if (!SlotHasData(slot)) return;
-
-        PlayerPrefs.DeleteKey($"SaveSlot_{slot}");
-        PlayerPrefs.Save();
-
-        if (slot == ActiveSlot) _data.Clear();
-
-        if (Instance != null && Instance.debugLogging)
-            Debug.Log($"deleted slot {slot}");
     }
 
     public static void Set(string key, string value) => _data[key] = value;
@@ -287,6 +275,9 @@ public class SaveManager : MonoBehaviour
 
     void CollectAndSave(string reason)
     {
+
+        if (IsMenuScene()) return;
+
         _data["_meta/timestamp"] = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm");
         _data["_meta/scene"] = SceneManager.GetActiveScene().name;
 
@@ -334,6 +325,12 @@ public class SaveManager : MonoBehaviour
             Debug.Log($" loaded slot {ActiveSlot}: {_data.Count} keys");
     }
 
+    bool IsMenuScene()
+    {
+        string current = SceneManager.GetActiveScene().name;
+        return current == "Title";
+    }
+
     [System.Serializable]
     class SaveWrapper
     {
@@ -358,5 +355,29 @@ public class SaveManager : MonoBehaviour
                 dict[keys[i]] = values[i];
             return dict;
         }
+    }
+
+    public static void DeleteSlot(int slot)
+    {
+        PlayerPrefs.DeleteKey($"SaveSlot_{slot}");
+        PlayerPrefs.Save();
+
+        if (slot == ActiveSlot)
+        {
+            _data.Clear();
+            ResetRuntime();
+        }
+
+        if (Instance != null && Instance.debugLogging)
+            Debug.Log($"deleted slot {slot}");
+    }
+
+    public static void ResetRuntime()
+    {
+        _data.Clear();
+        InventoryManager.Instance?.ResetInventory();
+
+        foreach (WorldItem wi in Resources.FindObjectsOfTypeAll<WorldItem>())
+            wi.ResetToWorld();
     }
 }

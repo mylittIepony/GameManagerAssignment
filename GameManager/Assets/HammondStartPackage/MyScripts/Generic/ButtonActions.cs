@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
 public class ButtonActions : MonoBehaviour
 {
     [Header("audio")]
@@ -11,6 +10,7 @@ public class ButtonActions : MonoBehaviour
     [Header("scenes")]
     public string playSceneName = "SampleScene";
     public string homeSceneName = "Title";
+    public bool useLoadingScreen = false;
 
     public void PlayClick()
     {
@@ -18,25 +18,23 @@ public class ButtonActions : MonoBehaviour
             AudioManager.Instance.PlaySFX(clickSound, clickVolume);
     }
 
-
     public void Play()
     {
         PlayClick();
         EnsureUnpaused();
-        SceneManager.LoadScene(playSceneName);
+        LoadScene(playSceneName);
     }
 
     public void Home()
     {
         PlayClick();
         EnsureUnpaused();
-        SceneManager.LoadScene(homeSceneName);
+        LoadScene(homeSceneName);
     }
 
     public void Exit()
     {
         PlayClick();
-
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -48,12 +46,17 @@ public class ButtonActions : MonoBehaviour
     {
         PlayClick();
         EnsureUnpaused();
-        SceneManager.LoadScene(sceneName);
+        if (SceneLoader.Instance != null)
+            SceneLoader.Instance.LoadSceneWithSave(sceneName, useLoadingScreen);
+        else
+        {
+            SaveManager.SaveBeforeSceneChange();
+            SceneManager.LoadScene(sceneName);
+        }
     }
 
     void EnsureUnpaused()
     {
-
         if (PauseManager.Instance != null)
             PauseManager.Instance.ForceResume();
         else

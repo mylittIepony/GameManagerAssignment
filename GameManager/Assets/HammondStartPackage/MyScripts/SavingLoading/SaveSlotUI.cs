@@ -75,15 +75,14 @@ public class SaveSlotUI : MonoBehaviour
     void OnPlaySlot(int slot)
     {
         SaveManager.SetActiveSlot(slot);
-
         string savedScene = SaveManager.Get("_meta/scene", "");
+        string targetScene = !string.IsNullOrEmpty(savedScene) ? savedScene : newGameScene;
 
-        if (!string.IsNullOrEmpty(savedScene))
-            SceneManager.LoadScene(savedScene);
+        if (SceneLoader.Instance != null)
+            SceneLoader.Instance.LoadScene(targetScene, true);
         else
-            SceneManager.LoadScene(newGameScene);
+            SceneManager.LoadScene(targetScene);
     }
-
     void OnDeleteSlot(int slot)
     {
         _pendingDeleteSlot = slot;

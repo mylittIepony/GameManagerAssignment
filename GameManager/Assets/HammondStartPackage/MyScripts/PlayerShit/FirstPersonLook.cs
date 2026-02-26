@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class FirstPersonLook : MonoBehaviour
+public class FirstPersonLook : MonoBehaviour, IPauseable
 {
     [Header("sensitivity")]
     public float mouseSensitivity = 2f;
@@ -26,7 +26,6 @@ public class FirstPersonLook : MonoBehaviour
 
     InputAction _lookAction;
     float _verticalRotation;
-    bool _cursorLocked;
     Vector2 _smoothedLook;
 
     void Awake()
@@ -41,7 +40,8 @@ public class FirstPersonLook : MonoBehaviour
     void OnEnable()
     {
         TryBindAction();
-        SetCursorLock(lockAndHideCursor);
+        if (!PauseManager.IsPaused)
+            SetCursorLock(lockAndHideCursor);
     }
 
     void OnDisable()
@@ -51,7 +51,6 @@ public class FirstPersonLook : MonoBehaviour
 
     void TryBindAction()
     {
-
         if (InputManager.Instance != null)
         {
             _lookAction = InputManager.Instance.FindAction(lookActionName);
@@ -61,11 +60,7 @@ public class FirstPersonLook : MonoBehaviour
         foreach (var map in FindObjectsByType<PlayerInput>(FindObjectsSortMode.None))
         {
             var action = map.actions.FindAction(lookActionName);
-            if (action != null)
-            {
-                _lookAction = action;
-                return;
-            }
+            if (action != null) { _lookAction = action; return; }
         }
 
         Debug.LogWarning($"could not find input action '{lookActionName}'");
@@ -73,10 +68,12 @@ public class FirstPersonLook : MonoBehaviour
 
     void SetCursorLock(bool locked)
     {
-        _cursorLocked = locked;
         Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
         Cursor.visible = !locked;
     }
+
+    void IPauseable.OnPause() => SetCursorLock(false);
+    void IPauseable.OnResume() => SetCursorLock(lockAndHideCursor);
 
     void LateUpdate()
     {

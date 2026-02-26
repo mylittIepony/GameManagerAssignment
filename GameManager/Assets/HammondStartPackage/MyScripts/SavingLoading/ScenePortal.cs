@@ -6,7 +6,6 @@ public static class SceneTransitionData
 {
     public static string PreviousScene;
     public static string PortalID;
-
     public static void Clear()
     {
         PreviousScene = null;
@@ -26,7 +25,7 @@ public class ScenePortal : MonoBehaviour
     public bool requireInteract = true;
     public string interactMapName = "";
     public string interactActionName = "Interact";
-    public bool showLoadingScreen;
+    public bool showLoadingScreen = true;
 
     bool _playerInRange;
     bool _transitioning;
@@ -50,7 +49,6 @@ public class ScenePortal : MonoBehaviour
     void CacheAction()
     {
         if (!requireInteract || InputManager.Instance == null) return;
-
         _interactAction = string.IsNullOrEmpty(interactMapName)
             ? InputManager.Instance.FindAction(interactActionName)
             : InputManager.Instance.FindAction(interactMapName, interactActionName);
@@ -82,25 +80,14 @@ public class ScenePortal : MonoBehaviour
         SceneTransitionData.PreviousScene = SceneManager.GetActiveScene().name;
         SceneTransitionData.PortalID = portalID;
 
-        try
-        {
-            SaveManager.SaveBeforeSceneChange();
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"scene portal threw: {e}");
-        }
-
         Time.timeScale = 1f;
 
-        try
+        if (SceneLoader.Instance != null)
+            SceneLoader.Instance.LoadSceneWithSave(targetScene, showLoadingScreen);
+        else
         {
+            SaveManager.SaveBeforeSceneChange();
             SceneManager.LoadScene(targetScene);
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"scene portal load scene('{targetScene}') threw: {e}");
-            _transitioning = false;
         }
     }
 
