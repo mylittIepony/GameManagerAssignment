@@ -24,6 +24,8 @@ public class PauseManager : MonoBehaviour
     public GameObject gameplayCanvas;
     public GameObject pauseCanvas;
     public Button saveButton;
+    // remove later for other shit
+    public Button homeButton;
 
     [Header("behaviour")]
     public bool freezeTime = true;
@@ -154,6 +156,7 @@ public class PauseManager : MonoBehaviour
         if (gameplayCanvas != null) gameplayCanvas.SetActive(isGameplay && !IsPaused);
         if (pauseCanvas != null) pauseCanvas.SetActive(false);
         if (saveButton != null) saveButton.gameObject.SetActive(isGameplay);
+        if (homeButton != null) homeButton.gameObject.SetActive(isGameplay);
     }
 
     bool IsGameplayScene() => gameplayScenes != null &&

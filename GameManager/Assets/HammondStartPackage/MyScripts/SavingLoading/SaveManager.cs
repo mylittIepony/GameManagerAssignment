@@ -75,6 +75,16 @@ public class SaveManager : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == "Title") return;
+
+        if (feedbackText != null)
+        {
+            feedbackText.alpha = 0f;
+            var c = feedbackText.color;
+            c.a = 0f;
+            feedbackText.color = c;
+            feedbackText.text = "";
+        }
+
         StartCoroutine(LoadSaveablesNextFrame(scene.name));
     }
 
@@ -110,17 +120,16 @@ public class SaveManager : MonoBehaviour
         if (Instance != null)
             Instance.CollectAndSave("pre slot-switch");
 
-        ResetRuntime();
-
         ActiveSlot = slot;
         Instance.Load();
+
+        ResetRuntime();
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 
         if (Instance != null && Instance.debugLogging)
             Debug.Log($"switched to slot {slot}. {_data.Count} keys");
     }
-
     public static bool SlotHasData(int slot) =>
         System.IO.File.Exists(SlotPath(slot));
 
@@ -269,6 +278,9 @@ public class SaveManager : MonoBehaviour
     {
         feedbackText.text = message;
         feedbackText.alpha = 1f;
+        var c = feedbackText.color;
+        c.a = 1f;
+        feedbackText.color = c;
 
         yield return new WaitForSecondsRealtime(feedbackFadeDelay);
 
@@ -276,11 +288,18 @@ public class SaveManager : MonoBehaviour
         while (elapsed < feedbackFadeDuration)
         {
             elapsed += Time.unscaledDeltaTime;
-            feedbackText.alpha = Mathf.Lerp(1f, 0f, elapsed / feedbackFadeDuration);
+            float a = Mathf.Lerp(1f, 0f, elapsed / feedbackFadeDuration);
+            feedbackText.alpha = a;
+            var col = feedbackText.color;
+            col.a = a;
+            feedbackText.color = col;
             yield return null;
         }
 
         feedbackText.alpha = 0f;
+        var final = feedbackText.color;
+        final.a = 0f;
+        feedbackText.color = final;
         feedbackText.text = "";
         _feedbackRoutine = null;
     }

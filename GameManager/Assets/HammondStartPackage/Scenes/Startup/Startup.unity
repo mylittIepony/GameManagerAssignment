@@ -1880,7 +1880,7 @@ MonoBehaviour:
   - {fileID: 646580433}
   blackOverlay: {fileID: 1132166045}
   nextSceneIndex: 1
-  loadNextScene: 0
+  loadNextScene: 1
   openFromBlackDuration: 1
   comicFadeInDuration: 0.6
   comicHoldBeforeLetters: 0.2

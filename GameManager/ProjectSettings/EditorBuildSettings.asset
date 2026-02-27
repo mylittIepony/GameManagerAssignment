@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/HammondStartPackage/Scenes/Startup/Startup.unity
+    guid: 87ac9cac560992441a052cc30fdbdd1c
+  - enabled: 1
     path: Assets/Scenes/Title.unity
     guid: 294d04a5fd631fe49ba905a3432bd0c3
   - enabled: 1
