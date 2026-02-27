@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03779cf84afb3b747bce607949e1cff2, type: 3}
+  m_Name: AppliedProfile_Panel (1)_504f8539
+  m_EditorClassIdentifier: UIEffectsPro.Runtime::UIEffectsPro.Runtime.UIEffectProfile
+  shapeType: 0
+  starPoints: 5
+  starInnerRatio: 0.5
+  customVertices: []
+  enableTexture: 0
+  overlayTexture: {fileID: 0}
+  textureParams:
+    tiling: {x: 1, y: 1}
+    offset: {x: 0, y: 0}
+    rotation: 0
+    opacity: 1
+    blendMode: 0
+    uvMode: 0
+    filterMode: 1
+    aspectMode: 0
+  cornerRadiusUnit: 0
+  useIndividualCorners: 0
+  globalCornerRadius: 10
+  cornerRadiusTopLeft: 10
+  cornerRadiusTopRight: 10
+  cornerRadiusBottomLeft: 10
+  cornerRadiusBottomRight: 10
+  useIndividualOffsets: 0
+  globalCornerOffset: 0.2
+  cornerOffsetTopLeft: 0.2
+  cornerOffsetTopRight: 0.2
+  cornerOffsetBottomLeft: 0.2
+  cornerOffsetBottomRight: 0.2
+  borderWidthUnit: 0
+  borderWidth: 0
+  borderColor: {r: 0, g: 0, b: 0, a: 1}
+  borderColorB: {r: 1, g: 1, b: 1, a: 1}
+  useBorderGradient: 0
+  borderGradientType: 0
+  borderGradientAngle: 0
+  borderGradientRadialCenter: {x: 0.5, y: 0.5}
+  borderGradientRadialScale: 1
+  borderGradientAngularRotation: 0
+  fillColor: {r: 0.70948875, g: 0.6933962, b: 1, a: 1}
+  enableBlur: 1
+  blurParams:
+    blurType: 1
+    queueOffset: 1
+    downsample: 3
+    iterations: 1
+    radius: 10
+  enableShadow: 1
+  shadowUnit: 0
+  shadowParams:
+    color: {r: 0, g: 0, b: 0, a: 1}
+    offset: {x: 2, y: -2}
+    blur: 4
+    opacity: 1
+  enableGradient: 1
+  gradientParams:
+    type: 0
+    colorA: {r: 1, g: 1, b: 1, a: 1}
+    colorB: {r: 1, g: 1, b: 1, a: 1}
+    angle: 186
+    radialCenter: {x: 0.5, y: 0.5}
+    angularRotation: 0
+    radialScale: 1
+    enabled: 0
+  useProgressBorder: 0
+  progressValue: 1
+  progressStartAngle: -90
+  progressDirection: 0
+  progressColorStart: {r: 0, g: 0, b: 0, a: 1}
+  progressColorEnd: {r: 0, g: 1, b: 0, a: 1}
+  useProgressColorGradient: 0

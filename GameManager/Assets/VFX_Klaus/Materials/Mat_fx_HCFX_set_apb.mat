@@ -84,7 +84,7 @@ Material:
     m_Ints: []
     m_Floats:
     - Boolean_52F3CBA5: 0
-    - Boolean_BB495B7B: 1
+    - Boolean_BB495B7B: 0
     - Vector1_53729B24: 1
     - _AlphaClip: 0
     - _BUILTIN_QueueControl: -1

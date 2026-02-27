@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 03779cf84afb3b747bce607949e1cff2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - overlayTexture: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 329695
+  packageName: UI Effects Pro
+  packageVersion: 4.0
+  assetPath: Assets/UIEffectsPro/Runtime/Scripts/Core/UIEffectProfile.cs
+  uploadId: 868362

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4194438c98054094b88b27698cc3554f
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 329695
+  packageName: UI Effects Pro
+  packageVersion: 4.0
+  assetPath: Assets/UIEffectsPro/Editor/UIEffectsPro.Editor.asmdef
+  uploadId: 868362

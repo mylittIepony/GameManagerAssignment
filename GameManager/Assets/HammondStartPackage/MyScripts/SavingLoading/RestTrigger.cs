@@ -8,13 +8,12 @@ public class RestTrigger : MonoBehaviour
     public bool requireInteract = true;
     public string interactMapName = "";
     public string interactActionName = "Interact";
-    public string restSceneName = ""; 
+    public string restSceneName = "";
 
     bool _playerInRange;
     bool _resting;
     GameObject _playerInTrigger;
     UnityEngine.InputSystem.InputAction _interactAction;
-    HealthSystem healthSystem;
 
     void OnEnable()
     {
@@ -69,17 +68,22 @@ public class RestTrigger : MonoBehaviour
     IEnumerator DoRest(GameObject player)
     {
         _resting = true;
+        PlayerRespawnPoint respawnPoint = player.GetComponent<PlayerRespawnPoint>();
+        respawnPoint?.SnapshotRestPoint();
 
+        HealthSystem playerHealth = player.GetComponentInChildren<HealthSystem>();
+        if (playerHealth != null)
+            playerHealth.FullHeal();
 
         foreach (EnemyHealthBar bar in FindObjectsByType<EnemyHealthBar>(FindObjectsSortMode.None))
         {
+            if (bar.healthSystem == null) continue;
+
             SaveManager.DeleteKey($"{bar.SaveID}/Dead");
-            if (bar.healthSystem != null)
-            {
-                bar.healthSystem.gameObject.SetActive(true);
-                bar.healthSystem.GetComponent<EnemyAITemp>()?.Revive();
-                healthSystem.Revive();
-            }
+
+            bar.healthSystem.gameObject.SetActive(true);
+            bar.healthSystem.GetComponent<EnemyAITemp>()?.Revive();
+            bar.healthSystem.Revive();
         }
 
         SaveManager.DeleteKeysEndingWith("/Dead");
@@ -89,11 +93,6 @@ public class RestTrigger : MonoBehaviour
             ? UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
             : restSceneName;
 
-
-        HealthSystem playerHealth = player.GetComponentInChildren<HealthSystem>();
-        if (playerHealth != null)
-            playerHealth.FullHeal();
-
         if (SceneLoader.Instance != null)
             SceneLoader.Instance.LoadSceneWithSave(scene, true);
         else
@@ -102,3 +101,5 @@ public class RestTrigger : MonoBehaviour
         yield return null;
     }
 }
+
+

@@ -134,6 +134,8 @@ public class SaveManager : MonoBehaviour
         var wrapper = JsonUtility.FromJson<SaveWrapper>(json);
         var dict = wrapper.ToDictionary();
 
+        if (dict.Count == 0) return "Empty"; 
+
         if (dict.TryGetValue("_meta/timestamp", out string timestamp))
             return $"Slot {slot + 1}  {timestamp}";
 
@@ -384,7 +386,6 @@ public class SaveManager : MonoBehaviour
         {
             ResetRuntime();
             _data.Clear();
-            Instance?.Save();
         }
 
         if (Instance != null && Instance.debugLogging)

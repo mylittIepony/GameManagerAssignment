@@ -51,6 +51,8 @@ public class SpawnManager : MonoBehaviour
 
         ApplyCustomization(player);
         ApplyWeapons(player);
+        foreach (var saveable in player.GetComponentsInChildren<ISaveable>())
+            saveable.OnLoad();
 
         SceneTransitionData.Clear();
     }

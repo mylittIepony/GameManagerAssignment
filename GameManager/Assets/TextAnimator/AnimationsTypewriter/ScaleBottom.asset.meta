@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 799f6e46b7fbdd441a08c4a5d943ea9e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 280574
+  packageName: Text Animator | Typewriter | TextMeshPro
+  packageVersion: 1.1
+  assetPath: Assets/TextAnimator/AnimationsTypewriter/ScaleBottom.asset
+  uploadId: 672692
