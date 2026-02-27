@@ -22,18 +22,32 @@ public class WorldItem : MonoBehaviour, ISaveable
     bool _playerInRange;
     bool _pickedUp;
     bool _isInWorld;
-    bool _isForeignDrop; 
+    bool _isForeignDrop;
 
     InputAction _interactAction;
     Vector3 _originalPosition;
     Quaternion _originalRotation;
-    string _homeScene;  
-    string _sceneName; 
+    string _homeScene;
+    string _sceneName;
+
+    string _cachedSaveID;
 
 
-    public string SaveID => _isForeignDrop
-        ? $"ForeignDrop/WorldItem/{uniqueID}"
-        : $"{_homeScene}/WorldItem/{uniqueID}";
+    [System.NonSerialized] public bool spawnedAsForeignDrop = false;
+
+    public string SaveID
+    {
+        get
+        {
+            if (_cachedSaveID != null) return _cachedSaveID;
+            _cachedSaveID = _isForeignDrop
+                ? $"ForeignDrop/WorldItem/{uniqueID}"
+                : $"{_homeScene}/WorldItem/{uniqueID}";
+            return _cachedSaveID;
+        }
+    }
+
+    void RefreshSaveID() => _cachedSaveID = null;
 
     public bool IsHeldByPlayer => _pickedUp;
 
@@ -44,6 +58,10 @@ public class WorldItem : MonoBehaviour, ISaveable
         _originalPosition = transform.position;
         _originalRotation = transform.rotation;
         _isInWorld = false;
+
+
+        if (spawnedAsForeignDrop)
+            _isForeignDrop = true;
 
         if (string.IsNullOrEmpty(uniqueID))
             uniqueID = $"{gameObject.name}_{_homeScene}_{_originalPosition.x:F2}_{_originalPosition.y:F2}_{_originalPosition.z:F2}";
@@ -64,13 +82,23 @@ public class WorldItem : MonoBehaviour, ISaveable
     {
         string activeScene = SceneManager.GetActiveScene().name;
 
+        _pickedUp = false;
+        _isInWorld = true;
+
+        bool nowForeign = (activeScene != _homeScene);
+        if (nowForeign != _isForeignDrop)
+        {
+            SaveManager.DeleteByPrefix(_cachedSaveID ?? "");
+            _isForeignDrop = nowForeign;
+            RefreshSaveID();
+        }
+
         _sceneName = activeScene;
-        _isForeignDrop = (activeScene != _homeScene);
 
         transform.position = position;
         transform.rotation = Quaternion.identity;
-        _pickedUp = false;
-        _isInWorld = true;
+
+        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
 
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
@@ -83,10 +111,7 @@ public class WorldItem : MonoBehaviour, ISaveable
         foreach (var col in GetComponentsInChildren<Collider>(true))
             col.enabled = true;
 
-
         gameObject.SetActive(true);
-        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
-      //  Debug.Log($"worlditem{} dropto() complete. scene={gameObject.scene.name} active={gameObject.activeSelf} isforeign={_isForeignDrop}");
 
         if (rb != null && force != Vector3.zero)
             rb.AddForce(force, ForceMode.VelocityChange);
@@ -150,19 +175,14 @@ public class WorldItem : MonoBehaviour, ISaveable
         SaveManager.ForceSave();
     }
 
-
-    void SetAsForeignDrop()
-    {
-        _isForeignDrop = true;
-        _sceneName = gameObject.scene.name;
-    }
-
     public void ResetToWorld()
     {
         if (!_pickedUp) return;
 
         _pickedUp = false;
         _isForeignDrop = false;
+        spawnedAsForeignDrop = false;
+        RefreshSaveID();
         _isInWorld = true;
         _sceneName = _homeScene;
 
@@ -200,10 +220,11 @@ public class WorldItem : MonoBehaviour, ISaveable
 
     public void OnSave()
     {
-
         if (_pickedUp)
         {
             SaveManager.SetBool($"{SaveID}/PickedUp", true);
+            if (itemData != null)
+                SaveManager.Set($"{SaveID}/ItemName", itemData.name);
             return;
         }
 
@@ -226,23 +247,73 @@ public class WorldItem : MonoBehaviour, ISaveable
     {
         if (this == null || gameObject == null) return;
 
-        
-
-        if (_pickedUp) return; 
-
-        string activeScene = SceneManager.GetActiveScene().name;
-        if (_sceneName != activeScene)  return; 
-
-        if (!SaveManager.HasKey($"{SaveID}/PickedUp"))
+        if (spawnedAsForeignDrop)
         {
-            _isInWorld = true;
-            gameObject.SetActive(true);
+
+            spawnedAsForeignDrop = false;
             return;
         }
 
-        _pickedUp = SaveManager.GetBool($"{SaveID}/PickedUp", false);
-        _isInWorld = SaveManager.GetBool($"{SaveID}/IsInWorld", true);
-        _isForeignDrop = SaveManager.GetBool($"{SaveID}/IsForeign", false);
+        string nativeKey = $"{_homeScene}/WorldItem/{uniqueID}";
+        string foreignKey = $"ForeignDrop/WorldItem/{uniqueID}";
+
+        bool hasForeignData = SaveManager.HasKey($"{foreignKey}/PickedUp");
+        bool hasNativeData = SaveManager.HasKey($"{nativeKey}/PickedUp");
+
+        if (hasForeignData && !_isForeignDrop)
+        {
+            bool pickedUp = SaveManager.GetBool($"{foreignKey}/PickedUp", false);
+            if (pickedUp)
+            {
+                _pickedUp = true;
+                DontDestroyOnLoad(gameObject);
+                gameObject.SetActive(false);
+                SaveManager.Instance?.StartCoroutine(RegisterWithCarrierNextFrame());
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+            return;
+        }
+
+        string loadKey = hasForeignData ? foreignKey : nativeKey;
+        if (hasForeignData) { _isForeignDrop = true; RefreshSaveID(); }
+        else { _isForeignDrop = false; RefreshSaveID(); }
+
+        if (!hasForeignData && !hasNativeData)
+        {
+            string activeScene = SceneManager.GetActiveScene().name;
+            if (activeScene == _homeScene)
+            {
+                _isInWorld = true;
+                _pickedUp = false;
+                transform.position = _originalPosition;
+                transform.rotation = _originalRotation;
+                gameObject.SetActive(true);
+
+                Rigidbody rb = GetComponent<Rigidbody>();
+                if (rb != null) { rb.isKinematic = false; rb.WakeUp(); }
+
+                foreach (var col in GetComponentsInChildren<Collider>())
+                    col.enabled = true;
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+            return;
+        }
+
+        bool pickedUpVal = SaveManager.GetBool($"{loadKey}/PickedUp", false);
+        bool isInWorld = SaveManager.GetBool($"{loadKey}/IsInWorld", true);
+        bool isForeign = SaveManager.GetBool($"{loadKey}/IsForeign", false);
+        string savedScene = SaveManager.Get($"{loadKey}/Scene", _homeScene);
+
+        _pickedUp = pickedUpVal;
+        _isInWorld = isInWorld;
+        _isForeignDrop = isForeign;
+        _sceneName = savedScene;
 
         if (_pickedUp)
         {
@@ -258,18 +329,28 @@ public class WorldItem : MonoBehaviour, ISaveable
             return;
         }
 
-        transform.position = SaveManager.GetVector3($"{SaveID}/Position", _originalPosition);
-        transform.rotation = Quaternion.Euler(SaveManager.GetVector3($"{SaveID}/Rotation", _originalRotation.eulerAngles));
-        quantity = SaveManager.GetInt($"{SaveID}/Quantity", quantity);
+        string currentScene = SceneManager.GetActiveScene().name;
+        if (_sceneName != currentScene)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
+        transform.position = SaveManager.GetVector3($"{loadKey}/Position", _originalPosition);
+        transform.rotation = Quaternion.Euler(SaveManager.GetVector3($"{loadKey}/Rotation", _originalRotation.eulerAngles));
+        quantity = SaveManager.GetInt($"{loadKey}/Quantity", quantity);
+
+        if (gameObject.scene.name == "DontDestroyOnLoad")
+        {
+            Scene target = SceneManager.GetSceneByName(_sceneName);
+            if (target.IsValid() && target.isLoaded)
+                SceneManager.MoveGameObjectToScene(gameObject, target);
+        }
 
         gameObject.SetActive(true);
 
-        Rigidbody rb = GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.isKinematic = false;
-            rb.WakeUp();
-        }
+        Rigidbody rb2 = GetComponent<Rigidbody>();
+        if (rb2 != null) { rb2.isKinematic = false; rb2.WakeUp(); }
 
         foreach (var col in GetComponentsInChildren<Collider>())
             col.enabled = true;

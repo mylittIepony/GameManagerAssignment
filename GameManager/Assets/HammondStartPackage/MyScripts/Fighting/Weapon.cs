@@ -276,6 +276,13 @@ public class Weapon : MonoBehaviour
         proj.GetComponent<Projectile>()?.Initialize(dir, gameObject);
     }
 
+    public void EnemyFire()
+    {
+        if (weaponMode == WeaponMode.Melee)
+            TryMelee();
+        else
+            FireOnce();
+    }
     void DoHitscan()
     {
         if (muzzlePoint == null) return;

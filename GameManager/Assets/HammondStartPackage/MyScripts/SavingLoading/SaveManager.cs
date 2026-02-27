@@ -30,10 +30,13 @@ public class SaveManager : MonoBehaviour
     public float feedbackFadeDuration = 0.5f;
 
     public static int ActiveSlot { get; private set; }
-    static string ActivePrefKey => $"SaveSlot_{ActiveSlot}";
+    static string SlotPath(int slot) =>
+        System.IO.Path.Combine(Application.persistentDataPath, $"SaveSlot_{slot}.json");
+    static string ActiveSlotPath => SlotPath(ActiveSlot);
 
     static Dictionary<string, string> _data = new Dictionary<string, string>();
     static List<ISaveable> _saveables = new List<ISaveable>();
+    static bool _isLoadingScene = false;
 
     Coroutine _feedbackRoutine;
     bool _saveCooldownActive;
@@ -52,10 +55,7 @@ public class SaveManager : MonoBehaviour
 
         if (feedbackText != null)
             feedbackText.text = "";
-    }
 
-    void Start()
-    {
         if (saveButton != null)
             saveButton.onClick.AddListener(OnSaveButtonPressed);
     }
@@ -80,6 +80,7 @@ public class SaveManager : MonoBehaviour
 
     IEnumerator LoadSaveablesNextFrame(string sceneName)
     {
+        _isLoadingScene = true;
         yield return null;
 
         ISaveable[] snapshot = _saveables.ToArray();
@@ -88,56 +89,55 @@ public class SaveManager : MonoBehaviour
         {
             if (saveable == null) continue;
             if (!(saveable is MonoBehaviour mb) || mb == null || mb.gameObject == null) continue;
-
-            try
-            {
-                saveable.OnLoad();
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($" on load threw on '{saveable.SaveID}': {e}");
-            }
+            try { saveable.OnLoad(); }
+            catch (System.Exception e) { Debug.LogError($"onload threw on '{saveable.SaveID}': {e}"); }
         }
 
+        _isLoadingScene = false;
+
         if (debugLogging)
-            Debug.Log($" loaded scene '{sceneName}', slot {ActiveSlot}, {snapshot.Length} saveables");
+            Debug.Log($"loaded scene '{sceneName}', slot {ActiveSlot}, {snapshot.Length} saveables");
     }
 
     public static void SetActiveSlot(int slot)
     {
         if (slot < 0 || (Instance != null && slot >= Instance.maxSaveSlots))
         {
-            Debug.LogWarning($"slot {slot} out of range");
+            Debug.LogWarning($"Slot {slot} out of range");
             return;
         }
 
-        ActiveSlot = slot;
-
         if (Instance != null)
-        {
-            Instance.Load();
-            if (Instance.debugLogging)
-                Debug.Log($"switched to slot {slot}. {_data.Count} keys");
-        }
+            Instance.CollectAndSave("pre slot-switch");
+
+        ResetRuntime();
+
+        ActiveSlot = slot;
+        Instance.Load();
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        if (Instance != null && Instance.debugLogging)
+            Debug.Log($"switched to slot {slot}. {_data.Count} keys");
     }
 
-    public static bool SlotHasData(int slot) => PlayerPrefs.HasKey($"SaveSlot_{slot}");
+    public static bool SlotHasData(int slot) =>
+        System.IO.File.Exists(SlotPath(slot));
 
     public static string GetSlotInfo(int slot)
     {
-        string key = $"SaveSlot_{slot}";
-        if (!PlayerPrefs.HasKey(key)) return "Empty";
+        if (!System.IO.File.Exists(SlotPath(slot))) return "Empty";
 
-        string json = PlayerPrefs.GetString(key, "");
+        string json = System.IO.File.ReadAllText(SlotPath(slot));
         if (string.IsNullOrEmpty(json)) return "Empty";
 
         var wrapper = JsonUtility.FromJson<SaveWrapper>(json);
         var dict = wrapper.ToDictionary();
 
         if (dict.TryGetValue("_meta/timestamp", out string timestamp))
-            return $"Slot {slot + 1} - {timestamp}";
+            return $"Slot {slot + 1}  {timestamp}";
 
-        return $"Slot {slot + 1} — {dict.Count} entries";
+        return $"Slot {slot + 1} {dict.Count} entries";
     }
 
     public static void Set(string key, string value) => _data[key] = value;
@@ -182,11 +182,21 @@ public class SaveManager : MonoBehaviour
         return def;
     }
 
+    public static void DeleteKeysEndingWith(string suffix)
+    {
+        var toRemove = new List<string>();
+        foreach (string key in _data.Keys)
+            if (key.EndsWith(suffix)) toRemove.Add(key);
+        foreach (string key in toRemove)
+            _data.Remove(key);
+    }
+
     public static bool HasKey(string key) => _data.ContainsKey(key);
     public static void DeleteKey(string key) => _data.Remove(key);
 
     public static void DeleteByPrefix(string prefix)
     {
+        if (string.IsNullOrEmpty(prefix)) return;
         var toRemove = new List<string>();
         foreach (string key in _data.Keys)
             if (key.StartsWith(prefix)) toRemove.Add(key);
@@ -203,13 +213,13 @@ public class SaveManager : MonoBehaviour
     public static void SaveBeforeSceneChange()
     {
         if (Instance != null && Instance.autoSaveOnSceneChange)
-            Instance.CollectAndSave("scene change");
+            Instance.CollectAndSaveForced("scene change");
     }
 
     public static void ForceSave()
     {
         if (Instance != null)
-            Instance.CollectAndSave("force");
+            Instance.CollectAndSaveForced("force");
     }
 
     public static void Register(ISaveable saveable)
@@ -218,7 +228,7 @@ public class SaveManager : MonoBehaviour
         {
             _saveables.Add(saveable);
             if (Instance != null && Instance.debugLogging)
-                Debug.Log($" registered: {saveable.SaveID}");
+                Debug.Log($"registered: {saveable.SaveID}");
         }
     }
 
@@ -230,7 +240,7 @@ public class SaveManager : MonoBehaviour
     void OnSaveButtonPressed()
     {
         if (_saveCooldownActive) return;
-        CollectAndSave("manual");
+        CollectAndSaveForced("manual");
         ShowFeedback("game saved");
         StartCoroutine(SaveCooldownRoutine());
     }
@@ -275,9 +285,19 @@ public class SaveManager : MonoBehaviour
 
     void CollectAndSave(string reason)
     {
-
         if (IsMenuScene()) return;
+        if (_isLoadingScene) return;
+        DoSave(reason);
+    }
 
+    void CollectAndSaveForced(string reason)
+    {
+        if (IsMenuScene()) return;
+        DoSave(reason);
+    }
+
+    void DoSave(string reason)
+    {
         _data["_meta/timestamp"] = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm");
         _data["_meta/scene"] = SceneManager.GetActiveScene().name;
 
@@ -288,41 +308,38 @@ public class SaveManager : MonoBehaviour
         {
             if (saveable == null) continue;
             if (!(saveable is MonoBehaviour mb) || mb == null || mb.gameObject == null) continue;
-
-            try
-            {
-                saveable.OnSave();
-                saved++;
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($" onsave threw on '{saveable.SaveID}': {e}");
-            }
+            try { saveable.OnSave(); saved++; }
+            catch (System.Exception e) { Debug.LogError($"onsave threw on '{saveable.SaveID}': {e}"); }
         }
 
         Save();
 
         if (debugLogging)
-            Debug.Log($" saved {saved} to slot {ActiveSlot}. reason: {reason}. keys: {_data.Count}");
+            Debug.Log($"saved {saved} saveables to slot {ActiveSlot}. reason: {reason}. keys: {_data.Count}");
     }
 
     void Save()
     {
-        string json = JsonUtility.ToJson(new SaveWrapper(_data));
-        PlayerPrefs.SetString(ActivePrefKey, json);
-        PlayerPrefs.Save();
+        string json = JsonUtility.ToJson(new SaveWrapper(_data), true);
+        System.IO.File.WriteAllText(ActiveSlotPath, json);
     }
 
     void Load()
     {
-        string json = PlayerPrefs.GetString(ActivePrefKey, "");
+        if (!System.IO.File.Exists(ActiveSlotPath))
+        {
+            _data = new Dictionary<string, string>();
+            return;
+        }
+
+        string json = System.IO.File.ReadAllText(ActiveSlotPath);
         if (string.IsNullOrEmpty(json)) { _data = new Dictionary<string, string>(); return; }
 
         SaveWrapper wrapper = JsonUtility.FromJson<SaveWrapper>(json);
         _data = wrapper.ToDictionary();
 
         if (debugLogging)
-            Debug.Log($" loaded slot {ActiveSlot}: {_data.Count} keys");
+            Debug.Log($"loaded slot {ActiveSlot} from {ActiveSlotPath}: {_data.Count} keys");
     }
 
     bool IsMenuScene()
@@ -359,13 +376,15 @@ public class SaveManager : MonoBehaviour
 
     public static void DeleteSlot(int slot)
     {
-        PlayerPrefs.DeleteKey($"SaveSlot_{slot}");
-        PlayerPrefs.Save();
+        string path = SlotPath(slot);
+        if (System.IO.File.Exists(path))
+            System.IO.File.Delete(path);
 
         if (slot == ActiveSlot)
         {
-            _data.Clear();
             ResetRuntime();
+            _data.Clear();
+            Instance?.Save();
         }
 
         if (Instance != null && Instance.debugLogging)
@@ -374,10 +393,30 @@ public class SaveManager : MonoBehaviour
 
     public static void ResetRuntime()
     {
-        _data.Clear();
         InventoryManager.Instance?.ResetInventory();
 
         foreach (WorldItem wi in Resources.FindObjectsOfTypeAll<WorldItem>())
+        {
+            if (wi == null) continue;
+            if (wi.gameObject.scene.name == "DontDestroyOnLoad")
+                Object.Destroy(wi.gameObject);
+        }
+
+        foreach (WorldItem wi in Resources.FindObjectsOfTypeAll<WorldItem>())
+        {
+            if (wi == null) continue;
             wi.ResetToWorld();
+        }
+
+        string activeScene = SceneManager.GetActiveScene().name;
+        foreach (ISaveable saveable in _saveables.ToArray())
+        {
+            if (saveable == null) continue;
+            if (saveable is WorldItem) continue;
+            if (!(saveable is MonoBehaviour mb) || mb == null || mb.gameObject == null) continue;
+            if (mb.gameObject.scene.name != activeScene) continue;
+            try { saveable.OnLoad(); }
+            catch (System.Exception e) { Debug.LogError($"resetruntime onload threw on '{saveable.SaveID}': {e}"); }
+        }
     }
 }

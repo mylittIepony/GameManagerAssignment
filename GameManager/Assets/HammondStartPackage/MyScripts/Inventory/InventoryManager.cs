@@ -37,6 +37,7 @@ public class InventoryManager : MonoBehaviour, ISaveable
 
     public string SaveID => "Inventory/Manager";
 
+
     void Awake()
     {
 
@@ -58,8 +59,16 @@ public class InventoryManager : MonoBehaviour, ISaveable
 
         if (inventoryCanvas != null)
         {
-            _inventoryOpen = alwaysShowInventory;
-            inventoryCanvas.SetActive(_inventoryOpen);
+            string sceneName = SceneManager.GetActiveScene().name;
+            bool isMenuScene = sceneName == "Title" || sceneName == "CharacterSelect";
+
+            if (isMenuScene)
+                inventoryCanvas.SetActive(false);
+            else
+            {
+                _inventoryOpen = alwaysShowInventory;
+                inventoryCanvas.SetActive(_inventoryOpen);
+            }
         }
 
         FindCarrier();
@@ -75,8 +84,14 @@ public class InventoryManager : MonoBehaviour, ISaveable
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (inventoryCanvas == null) return;
-        bool isGameplay = scene.name != "Title";
-        inventoryCanvas.SetActive(isGameplay && (alwaysShowInventory || _inventoryOpen));
+
+        bool isMenuScene = scene.name == "Title" || scene.name == "CharacterSelect";
+        if (isMenuScene) { inventoryCanvas.SetActive(false); return; }
+
+        if (alwaysShowInventory)
+            inventoryCanvas.SetActive(true);
+        else
+            inventoryCanvas.SetActive(_inventoryOpen);
     }
 
 
@@ -432,12 +447,18 @@ public class InventoryManager : MonoBehaviour, ISaveable
         UpdateHeldItem();
     }
 
-    public void ResetInventory()
+public void ResetInventory()
+{
+    _carrier?.ClearHeldItem();
+    _activeSlotIndex = -1;
+    IsHoldingInventoryItem = false;
+    InitializeSlots();
+    UpdateSlotVisuals();
+
+    foreach (WorldItem wi in Resources.FindObjectsOfTypeAll<WorldItem>())
     {
-        _carrier?.ClearHeldItem();
-        _activeSlotIndex = -1;
-        IsHoldingInventoryItem = false;
-        InitializeSlots();
-        UpdateSlotVisuals();
+        if (wi.gameObject.scene.name == "DontDestroyOnLoad")
+            Destroy(wi.gameObject);
     }
+}
 }
