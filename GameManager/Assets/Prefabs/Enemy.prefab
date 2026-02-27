@@ -674,7 +674,7 @@ MonoBehaviour:
   regenDelay: 5
   animator: {fileID: 0}
   deathAnimTrigger: Die
-  deathVFXPrefab: {fileID: 0}
+  deathVFXPrefab: {fileID: 3310820009152617773, guid: ed58507349914c842b10aaefe1af98b5, type: 3}
   deathVFXDestroyTime: 3
   deathEventDelay: 1.5
   destroyOnDeath: 0

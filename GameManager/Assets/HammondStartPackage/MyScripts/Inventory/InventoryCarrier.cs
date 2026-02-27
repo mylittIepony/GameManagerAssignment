@@ -146,4 +146,9 @@ public class InventoryCarrier : MonoBehaviour
         GameObject vfx = Instantiate(swapVFXPrefab, point.position, point.rotation);
         Destroy(vfx, vfxLifetime);
     }
+
+    public void ClearSourceMap()
+    {
+        _itemSourceMap.Clear();
+    }
 }

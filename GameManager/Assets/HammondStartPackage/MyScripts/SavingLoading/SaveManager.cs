@@ -37,7 +37,8 @@ public class SaveManager : MonoBehaviour
     static Dictionary<string, string> _data = new Dictionary<string, string>();
     static List<ISaveable> _saveables = new List<ISaveable>();
     static bool _isLoadingScene = false;
-
+    public static int GetRestCount() => GetInt("_meta/restCount", 0);
+    public static void IncrementRestCount() => SetInt("_meta/restCount", GetRestCount() + 1);
     Coroutine _feedbackRoutine;
     bool _saveCooldownActive;
 

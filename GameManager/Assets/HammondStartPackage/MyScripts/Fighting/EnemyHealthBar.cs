@@ -33,7 +33,6 @@ public class EnemyHealthBar : MonoBehaviour, ISaveable
             canvasGroup = GetComponent<CanvasGroup>();
 
         canvasGroup.alpha = 0f;
-
         _lastHealth = healthSystem != null ? healthSystem.CurrentHealth : 0f;
 
         if (string.IsNullOrEmpty(enemyID))
@@ -80,6 +79,9 @@ public class EnemyHealthBar : MonoBehaviour, ISaveable
     {
         if (_fadeRoutine != null) StopCoroutine(_fadeRoutine);
         canvasGroup.alpha = 0f;
+
+        if (saveHealth)
+            SaveManager.SetInt($"{SaveID}/DeadAtRest", SaveManager.GetInt("_meta/restCount", 0));
     }
 
     void OnHealthChanged(float current, float max)
@@ -137,6 +139,9 @@ public class EnemyHealthBar : MonoBehaviour, ISaveable
         SaveManager.SetFloat($"{SaveID}/Health", healthSystem.CurrentHealth);
         SaveManager.SetBool($"{SaveID}/Dead", isDead);
 
+        if (isDead && !SaveManager.HasKey($"{SaveID}/DeadAtRest"))
+            SaveManager.SetInt($"{SaveID}/DeadAtRest", SaveManager.GetInt("_meta/restCount", 0));
+
         Transform root = healthSystem.transform;
         SaveManager.SetVector3($"{SaveID}/Position", root.position);
         SaveManager.SetVector3($"{SaveID}/Rotation", root.eulerAngles);
@@ -145,10 +150,6 @@ public class EnemyHealthBar : MonoBehaviour, ISaveable
     public void OnLoad()
     {
         if (!saveHealth || healthSystem == null) return;
-
-        if (!SaveManager.HasKey($"{SaveID}/Health"))
-            healthSystem.gameObject.SetActive(true);
-
         StartCoroutine(ApplyLoadNextFrame());
     }
 
@@ -157,46 +158,45 @@ public class EnemyHealthBar : MonoBehaviour, ISaveable
         yield return null;
         _isLoading = true;
 
-        yield return null;
-        _isLoading = true;
-
-        bool hasKey = SaveManager.HasKey($"{SaveID}/Health");
-        bool dead2 = SaveManager.GetBool($"{SaveID}/Dead", false);
-        Debug.Log($"{SaveID} haskey: {hasKey}, dead: {dead2}");
-
         if (!SaveManager.HasKey($"{SaveID}/Health"))
         {
             healthSystem.gameObject.SetActive(true);
-            EnemyAITemp ai = healthSystem.GetComponent<EnemyAITemp>();
-            ai?.Revive();
+            healthSystem.GetComponent<EnemyAITemp>()?.Revive();
             healthSystem.Revive();
             _lastHealth = healthSystem.MaxHealth;
-            yield return null; 
+            yield return null;
             SnapBar(healthBar, 1f);
             _isLoading = false;
             yield break;
         }
 
-        float health = SaveManager.GetFloat($"{SaveID}/Health", healthSystem.MaxHealth);
         bool dead = SaveManager.GetBool($"{SaveID}/Dead", false);
-
-        Transform root = healthSystem.transform;
-        root.position = SaveManager.GetVector3($"{SaveID}/Position", root.position);
-        root.rotation = Quaternion.Euler(SaveManager.GetVector3($"{SaveID}/Rotation", root.eulerAngles));
 
         if (dead)
         {
-            EnemyAITemp ai = healthSystem.GetComponent<EnemyAITemp>();
-            ai?.DieSilently();
+            int deadAtRest = SaveManager.GetInt($"{SaveID}/DeadAtRest", 0);
+            int currentRest = SaveManager.GetInt("_meta/restCount", 0);
+            Debug.Log($"{SaveID} dead:{dead} deadAtRest:{SaveManager.GetInt($"{SaveID}/DeadAtRest", -999)} currentRest:{SaveManager.GetInt("_meta/restCount", 0)} slot:{SaveManager.ActiveSlot}");
+
+            if (deadAtRest < currentRest)
+                dead = false;
+        }
+
+        if (dead)
+        {
+            healthSystem.GetComponent<EnemyAITemp>()?.DieSilently();
             healthSystem.gameObject.SetActive(false);
+            _isLoading = false;
         }
         else
         {
+            healthSystem.gameObject.SetActive(true);
+            healthSystem.GetComponent<EnemyAITemp>()?.Revive();
             _isLoading = true;
-            healthSystem.SetHealthDirectly(health);
-            _lastHealth = health;
-            yield return null; 
-            SnapBar(healthBar, health / healthSystem.MaxHealth);
+            healthSystem.SetHealthDirectly(healthSystem.MaxHealth);
+            _lastHealth = healthSystem.MaxHealth;
+            yield return null;
+            SnapBar(healthBar, 1f);
             _isLoading = false;
         }
     }

@@ -10,6 +10,9 @@ public class RestTrigger : MonoBehaviour
     public string interactActionName = "Interact";
     public string restSceneName = "";
 
+    [Header("spawn")]
+    public Transform restSpawnPoint;
+
     bool _playerInRange;
     bool _resting;
     GameObject _playerInTrigger;
@@ -46,11 +49,9 @@ public class RestTrigger : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(playerTag))
-        {
-            _playerInRange = false;
-            _playerInTrigger = null;
-        }
+        if (!other.CompareTag(playerTag)) return;
+        _playerInRange = false;
+        _playerInTrigger = null;
     }
 
     void OnInteractPerformed(UnityEngine.InputSystem.InputAction.CallbackContext ctx)
@@ -68,25 +69,23 @@ public class RestTrigger : MonoBehaviour
     IEnumerator DoRest(GameObject player)
     {
         _resting = true;
+
         PlayerRespawnPoint respawnPoint = player.GetComponent<PlayerRespawnPoint>();
-        respawnPoint?.SnapshotRestPoint();
+        if (respawnPoint != null)
+        {
+            if (restSpawnPoint != null)
+                respawnPoint.SnapshotRestPoint(restSpawnPoint.position, restSpawnPoint.rotation);
+            else
+                respawnPoint.SnapshotRestPoint();
+        }
 
         HealthSystem playerHealth = player.GetComponentInChildren<HealthSystem>();
         if (playerHealth != null)
             playerHealth.FullHeal();
 
-        foreach (EnemyHealthBar bar in FindObjectsByType<EnemyHealthBar>(FindObjectsSortMode.None))
-        {
-            if (bar.healthSystem == null) continue;
+        SaveManager.IncrementRestCount();
+        Debug.Log($"restCount is now {SaveManager.GetInt("_meta/restCount", 0)}");
 
-            SaveManager.DeleteKey($"{bar.SaveID}/Dead");
-
-            bar.healthSystem.gameObject.SetActive(true);
-            bar.healthSystem.GetComponent<EnemyAITemp>()?.Revive();
-            bar.healthSystem.Revive();
-        }
-
-        SaveManager.DeleteKeysEndingWith("/Dead");
         SaveManager.ForceSave();
 
         string scene = string.IsNullOrEmpty(restSceneName)
@@ -94,12 +93,10 @@ public class RestTrigger : MonoBehaviour
             : restSceneName;
 
         if (SceneLoader.Instance != null)
-            SceneLoader.Instance.LoadSceneWithSave(scene, true);
+            SceneLoader.Instance.LoadScene(scene, true);
         else
             UnityEngine.SceneManagement.SceneManager.LoadScene(scene);
 
         yield return null;
     }
 }
-
-

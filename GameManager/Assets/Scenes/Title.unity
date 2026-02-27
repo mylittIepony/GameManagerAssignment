@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: d0523d8917957bb429a32997cb0e52b2, type: 2}
   m_HaloStrength: 0.5
@@ -311,59 +311,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8502553077411388581, guid: a1b52e567f1a15149a43d7f30ecccda4, type: 3}
   m_PrefabInstance: {fileID: 109741416}
   m_PrefabAsset: {fileID: 0}
---- !u!21 &112712613
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Height Fog Global
-  m_Shader: {fileID: 4800000, guid: 3a7ef1b66bafb7a448a880ef76d2e6e6, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _RECEIVESHADOWS_OFF
-  - _SURFACE_TYPE_TRANSPARENT
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3001
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _AddPrecomputedVelocity: 1
-    - _AlphaCutoff: 0.5
-    - _Banner: 1
-    - _FogCameraMode: 0
-    - _HeightFogGlobal: 1
-    - _IsHeightFogShader: 1
-    - _QueueControl: -1
-    - _QueueOffset: 0
-    - _ReceiveShadows: 0
-    - _XRMotionVectorsPass: 1
-    m_Colors:
-    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1001 &123526425
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -586,13 +533,14 @@ GameObject:
   - component: {fileID: 164256287}
   - component: {fileID: 164256286}
   - component: {fileID: 164256285}
+  - component: {fileID: 164256289}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &164256285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -609,8 +557,8 @@ MonoBehaviour:
   - hide: 0
     settings:
       preset: {fileID: 11400000, guid: e7d2488ee8a28244ba7f22301ae49ba1, type: 2}
-      amount: 7.37
-      height: 0.48
+      amount: 3.34
+      height: 0.41
       thickness: 5.9
       angle: 1
       tiling: 1
@@ -629,7 +577,7 @@ MonoBehaviour:
   - hide: 0
     settings:
       preset: {fileID: 11400000, guid: e3bd786351b82814c88049ecf927455b, type: 2}
-      amount: 3.28
+      amount: 2.32
       height: 0.52
       thickness: 1
       angle: 1
@@ -723,6 +671,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 272859624}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &164256289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 164256284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b7ec84d136d88e4398d563cb01a9cf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GPUInstancerPro.TerrainModule::GPUInstancerPro.TerrainModule.GPUITerrainBuiltin
+  _bounds:
+    m_Center: {x: 100, y: 300, z: 50}
+    m_Extent: {x: 100, y: 300, z: 50}
+  _bakedDetailTextures: []
+  isAutoFindTreeManager: 1
+  isAutoFindDetailManager: 1
+  terrainHolesSampleMode: 0
+  enableDetailDensityReduction: 1
+  _terrainTreeDistance: 5000
+  _isBakedDetailTextures: 0
+  _isCustomBakedDetailTextures: 0
+  _terrain: {fileID: 164256287}
 --- !u!1001 &189427364
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -921,6 +893,59 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7577002076852444859, guid: cdaa796b1be10ad4eb494967d07bf1db, type: 3}
   m_PrefabInstance: {fileID: 200379518}
   m_PrefabAsset: {fileID: 0}
+--- !u!21 &212118391
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Height Fog Global
+  m_Shader: {fileID: 4800000, guid: 3a7ef1b66bafb7a448a880ef76d2e6e6, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _RECEIVESHADOWS_OFF
+  - _SURFACE_TYPE_TRANSPARENT
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3001
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AddPrecomputedVelocity: 1
+    - _AlphaCutoff: 0.5
+    - _Banner: 1
+    - _FogCameraMode: 0
+    - _HeightFogGlobal: 1
+    - _IsHeightFogShader: 1
+    - _QueueControl: -1
+    - _QueueOffset: 0
+    - _ReceiveShadows: 0
+    - _XRMotionVectorsPass: 1
+    m_Colors:
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1001 &239360550
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -933,6 +958,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Common
       objectReference: {fileID: 0}
+    - target: {fileID: 2162979181904339133, guid: c1ec304d1ba566b4fa75cd817beaf9eb, type: 3}
+      propertyPath: highQuality
+      value: 
+      objectReference: {fileID: 11400000, guid: f993741e885bfe74d9193b7edad47c33, type: 2}
+    - target: {fileID: 2162979181904339133, guid: c1ec304d1ba566b4fa75cd817beaf9eb, type: 3}
+      propertyPath: mediumQuality
+      value: 
+      objectReference: {fileID: 11400000, guid: 43ffdaffe2dff9b48a73d25121d0ca9b, type: 2}
     - target: {fileID: 4571456260387789676, guid: c1ec304d1ba566b4fa75cd817beaf9eb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 53.50986
@@ -973,6 +1006,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5842151428116651765, guid: c1ec304d1ba566b4fa75cd817beaf9eb, type: 3}
+      propertyPath: gameplayScenes.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5842151428116651765, guid: c1ec304d1ba566b4fa75cd817beaf9eb, type: 3}
+      propertyPath: 'gameplayScenes.Array.data[3]'
+      value: Place3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -993,7 +1034,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &253049479
 Transform:
   m_ObjectHideFlags: 0
@@ -1206,21 +1247,21 @@ MonoBehaviour:
   fogColorDuo: 1
   fogDistanceStart: 0
   fogDistanceEnd: 100
-  fogDistanceFalloff: 2.56
+  fogDistanceFalloff: 5.17
   fogHeightStart: 0
   fogHeightEnd: 100
   fogHeightFalloff: 1
   farDistanceHeight: 0
   farDistanceOffset: 0
   categorySkybox: 1
-  skyboxFogIntensity: 1
+  skyboxFogIntensity: 0.532
   skyboxFogHeight: 0.48
   skyboxFogFalloff: 2.55
   skyboxFogOffset: -0.08
   skyboxFogBottom: 0
   skyboxFogFill: 0.174
   categoryDirectional: 1
-  directionalIntensity: 0.893
+  directionalIntensity: 1
   directionalFalloff: 1
   directionalColor: {r: 2.270603, g: 1.1263621, b: 0, a: 1}
   categoryNoise: 1
@@ -1267,7 +1308,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 112712613}
+  - {fileID: 212118391}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7208,6 +7249,406 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4442000838966563192, guid: c4d7564e5dd4c184e89ff98c3aee6f84, type: 3}
   m_PrefabInstance: {fileID: 763337720}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &803144620
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 803144622}
+  - component: {fileID: 803144621}
+  m_Layer: 0
+  m_Name: GPUI Tree Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &803144621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 803144620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc071a606fd17964d988019d4f90155e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: GPUInstancerPro.TerrainModule::GPUInstancerPro.TerrainModule.GPUITreeManager
+  isDontDestroyOnLoad: 0
+  _prototypes:
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 8459868569332144490, guid: ee2029ea1e4471d4f959da8e9d260fae, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_tree_ancient_01
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 3821402398438302127, guid: 83e4a990f47b22b4992fbf59a18dd511, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_tree_ancient_02
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 4500183347740282985, guid: 493bf40017ea63e4fac28393cdf8ceab, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_tree_ancient_03
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 4159018666980803487, guid: f3de7c33413cf254dbd018d8d0410166, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_plant_ancient_04_01
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 6783870996542297708, guid: bee83a95d9e4120488b563d18a512777, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_plant_ancient_04_03
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 4827465680562786929, guid: 3bea314024eb3ac49a5d9d7919aa1f73, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_plant_ancient_08
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 6247228275163355280, guid: dffb2eba1b1ab2c4b89eb3d2b6780d44, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_plant_ancient_19_02
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 5935025488224354344, guid: 94db9495d06baed46a8b4fbc9b376f44, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_plant_ancient_19_01
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 3559500654753784739, guid: 0e4a3b18e75edbf43ad509dcf48e1f06, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_flower_ancient_01_01
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 7483798054475361385, guid: 95dc093ac55fc844a94f38187add635f, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_flower_ancient_03
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 391175505550692440, guid: 054ecceb5a73cd64fbfdcb88d3b984ae, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_flower_ancient_02
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 919132149155446097, guid: 7b276e69de76f6d499b21af3b62699fc, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: SM_ENV_flower_ancient_01_02
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 4099957120491989760, guid: 8ef56da9c4aca1547bf0c3965f2b4751, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_bush_ancient_01
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 1802037844901450293, guid: 1bbb0d8f6f0014844861512eb965e47e, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_bush_ancient_03
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 2392944684818252156, guid: 0da67aa787819c641a8d7eb86e01b37c, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_stone_ancient_01
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 5588491922004264845, guid: 7b0dfaa7cf89cff40bdcc3c5fffbff51, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_stone_ancient_02
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 9130188792239670815, guid: a1b52e567f1a15149a43d7f30ecccda4, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_stone_ancient_03
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 905532122547443087, guid: 965e9ab632d62564e936db125b0764bb, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_mushrooms_ancient_01_01
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 326134965098840643, guid: c73ae568374ce994db47430f774b5fe0, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: P_ENV_mushrooms_ancient_02_02
+  - prototypeType: 0
+    profile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+    prefabObject: {fileID: 919132149155446097, guid: a1fcea1bca9d8e34f941a2c8f843ea05, type: 3}
+    gpuiLODGroupData: {fileID: 0}
+    prototypeMesh: {fileID: 0}
+    prototypeMaterials: []
+    layer: 0
+    isGenerateBillboard: 0
+    isBillboardReplaceLODCulled: 1
+    billboardDistance: 0.9
+    billboardAsset: {fileID: 0}
+    isRequireTreeProxy: 0
+    isEnabled: 1
+    name: SM_ENV_mushrooms_ancient_03_02
+  defaultProfile: {fileID: 11400000, guid: 1bbed77ce41b4754ba49432af2b6e07b, type: 2}
+  isEnableDefaultRenderingWhenDisabled: 1
+  _disablePlayModeRendering: 0
+  editor_isRenderInEditMode: 1
+  editor_isTextMode: 0
+  editor_isRollbackRuntimeProfileChanges: 0
+  _prototypeDataArray:
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  - isApplyRotation: 1
+    isApplyPrefabScale: 1
+    isApplyHeight: 1
+  _gpuiTerrains:
+  - {fileID: 164256289}
+  _isAutoAddPrototypesBasedOnTerrains: 1
+  _isAutoAddActiveTerrainsOnInitialization: 0
+  _isAutoRemovePrototypesBasedOnTerrains: 0
+  _enableTreeInstanceColors: 0
+  _autoGenerateBillboards: 1
+--- !u!4 &803144622
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 803144620}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &862501506
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8735,7 +9176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fc3f9d818d5d624b94118659d88a475, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UIEffectsPro.Runtime::UIEffectsPro.Runtime.UIEffectComponent
-  profile: {fileID: 11400000, guid: b60d517af6feafe47a9751ef54266840, type: 2}
+  profile: {fileID: 11400000, guid: 37d42be00360f6a4887edf6afb9af7f2, type: 2}
   autoUpdate: 1
   forceUpdateEveryFrame: 0
   optimizeBlur: 1
@@ -10709,7 +11150,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2138357373
 Transform:
   m_ObjectHideFlags: 0
@@ -10755,3 +11196,4 @@ SceneRoots:
   - {fileID: 272859624}
   - {fileID: 2046315929}
   - {fileID: 85774000}
+  - {fileID: 803144622}

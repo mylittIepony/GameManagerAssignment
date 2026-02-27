@@ -411,10 +411,14 @@ public class InventoryManager : MonoBehaviour, ISaveable
 
     public void OnLoad()
     {
+
+        InitializeSlots();
+        _carrier?.ClearHeldItem();
+        IsHoldingInventoryItem = false;
+
         for (int i = 0; i < _slots.Count; i++)
         {
             string itemName = SaveManager.Get($"{SaveID}/Slot{i}/ItemName", "");
-
             if (!string.IsNullOrEmpty(itemName))
             {
                 InventoryItemData data = Resources.Load<InventoryItemData>($"Items/{itemName}");
@@ -423,18 +427,12 @@ public class InventoryManager : MonoBehaviour, ISaveable
                     _slots[i].itemData = data;
                     _slots[i].quantity = SaveManager.GetInt($"{SaveID}/Slot{i}/Quantity", 1);
                 }
-                else
-                {
-                    _slots[i].Clear();
-                }
-            }
-            else
-            {
-                _slots[i].Clear();
             }
         }
 
-        _activeSlotIndex = SaveManager.HasKey($"{SaveID}/ActiveSlot") ? SaveManager.GetInt($"{SaveID}/ActiveSlot", -1) : -1;
+        _activeSlotIndex = SaveManager.HasKey($"{SaveID}/ActiveSlot")
+            ? SaveManager.GetInt($"{SaveID}/ActiveSlot", -1) : -1;
+
         UpdateSlotVisuals();
         StartCoroutine(UpdateHeldItemDeferred());
     }
@@ -447,18 +445,21 @@ public class InventoryManager : MonoBehaviour, ISaveable
         UpdateHeldItem();
     }
 
-public void ResetInventory()
-{
-    _carrier?.ClearHeldItem();
-    _activeSlotIndex = -1;
-    IsHoldingInventoryItem = false;
-    InitializeSlots();
-    UpdateSlotVisuals();
-
-    foreach (WorldItem wi in Resources.FindObjectsOfTypeAll<WorldItem>())
+    public void ResetInventory()
     {
-        if (wi.gameObject.scene.name == "DontDestroyOnLoad")
-            Destroy(wi.gameObject);
+        _carrier?.ClearHeldItem();
+        if (_carrier != null)
+            _carrier.ClearSourceMap();
+
+        _activeSlotIndex = -1;
+        IsHoldingInventoryItem = false;
+        InitializeSlots();
+        UpdateSlotVisuals();
+
+        foreach (WorldItem wi in Resources.FindObjectsOfTypeAll<WorldItem>())
+        {
+            if (wi.gameObject.scene.name == "DontDestroyOnLoad")
+                Destroy(wi.gameObject);
+        }
     }
-}
 }
