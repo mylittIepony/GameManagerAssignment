@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class InventoryManager : MonoBehaviour, ISaveable
 {
@@ -32,24 +34,119 @@ public class InventoryManager : MonoBehaviour, ISaveable
     float _previousTimeScale = 1f;
 
     InputAction _toggleInventoryAction;
-
     InventoryCarrier _carrier;
 
     public string SaveID => "Inventory/Manager";
 
-
     void Awake()
     {
-
-        SceneManager.sceneLoaded += OnSceneLoaded;
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
-
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
         InitializeSlots();
         SetupInput();
         SaveManager.Register(this);
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SpawnManager.OnPlayerSpawned += OnPlayerSpawned;
+        SaveManager.OnLoadComplete += OnLoadComplete;
+    }
+
+    void OnDestroy()
+    {
+        SaveManager.Unregister(this);
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SpawnManager.OnPlayerSpawned -= OnPlayerSpawned;
+        SaveManager.OnLoadComplete -= OnLoadComplete;
+        if (Instance == this) Instance = null;
+    }
+
+    void OnPlayerSpawned(GameObject player)
+    {
+        InventoryCarrier newCarrier = player.GetComponent<InventoryCarrier>();
+        if (newCarrier == null) return;
+        if (_carrier != null) _carrier.ClearSourceMap();
+        _carrier = newCarrier;
+        _carrier.ClearSourceMap();
+    }
+
+    void OnLoadComplete()
+    {
+        if (_carrier == null) return;
+        _carrier.ClearSourceMap();
+
+        var liveItems = new Dictionary<string, WorldItem>();
+        foreach (WorldItem wi in Resources.FindObjectsOfTypeAll<WorldItem>())
+        {
+            if (wi == null || string.IsNullOrEmpty(wi.uniqueID)) continue;
+            if (!wi.IsHeldByPlayer) continue; 
+            liveItems[wi.uniqueID] = wi;
+
+        }
+        for (int i = 0; i < _slots.Count; i++)
+        {
+            InventorySlot slot = _slots[i];
+            if (slot.IsEmpty || slot.itemData?.worldPrefab == null) continue;
+
+            foreach (string id in slot.worldItemIDs)
+            {
+                if (liveItems.ContainsKey(id)) continue;
+                string nativeKey = $"{SaveManager.Get($"WorldItemHome/{id}", "")}/WorldItem/{id}";
+                if (SaveManager.GetBool($"{nativeKey}/PickedUp", false)) continue;
+
+                string homeScene = SaveManager.Get($"WorldItemHome/{id}", "");
+
+                GameObject go = Instantiate(slot.itemData.worldPrefab);
+                go.SetActive(false);
+
+                WorldItem wi = go.GetComponent<WorldItem>();
+                if (wi == null) { Destroy(go); continue; }
+
+                wi.uniqueID = id;
+                wi.itemData = slot.itemData;
+                wi.quantity = 1;
+                wi.ForcePickedUp(homeScene);
+
+                DontDestroyOnLoad(go);
+                liveItems[id] = wi;
+
+                Debug.Log($"[inv] respawned ddol ghost: {id} homeScene:{homeScene}");
+            }
+        }
+
+        foreach (var kvp in liveItems)
+        {
+            if (kvp.Value == null || kvp.Value.itemData == null) continue;
+            _carrier.RegisterPickedUpItem(kvp.Value.itemData, kvp.Value);
+        }
+
+        Debug.Log($"[inv] onloadcomplete live:{liveItems.Count} slots filled:{GetFilledSlotCount()}");
+        UpdateHeldItem();
+    }
+
+    public void TrackWorldItemInSlot(InventoryItemData data, string uniqueID)
+    {
+        for (int i = 0; i < _slots.Count; i++)
+        {
+            if (_slots[i].itemData == data && !_slots[i].worldItemIDs.Contains(uniqueID))
+            {
+                _slots[i].worldItemIDs.Add(uniqueID);
+                return;
+            }
+        }
+    }
+
+    public void UntrackWorldItemFromSlot(InventoryItemData data, string uniqueID)
+    {
+        for (int i = 0; i < _slots.Count; i++)
+        {
+            if (_slots[i].itemData == data)
+            {
+                _slots[i].worldItemIDs.Remove(uniqueID);
+                return;
+            }
+        }
     }
 
     void Start()
@@ -61,7 +158,6 @@ public class InventoryManager : MonoBehaviour, ISaveable
         {
             string sceneName = SceneManager.GetActiveScene().name;
             bool isMenuScene = sceneName == "Title" || sceneName == "CharacterSelect";
-
             if (isMenuScene)
                 inventoryCanvas.SetActive(false);
             else
@@ -70,62 +166,20 @@ public class InventoryManager : MonoBehaviour, ISaveable
                 inventoryCanvas.SetActive(_inventoryOpen);
             }
         }
-
-        FindCarrier();
-    }
-
-    void OnDestroy()
-    {
-        SaveManager.Unregister(this);
-        if (Instance == this) Instance = null;
-        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (inventoryCanvas == null) return;
-
         bool isMenuScene = scene.name == "Title" || scene.name == "CharacterSelect";
         if (isMenuScene) { inventoryCanvas.SetActive(false); return; }
-
-        if (alwaysShowInventory)
-            inventoryCanvas.SetActive(true);
-        else
-            inventoryCanvas.SetActive(_inventoryOpen);
-    }
-
-
-
-    void FindCarrier()
-    {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null) return;
-
-        InventoryCarrier newCarrier = player.GetComponent<InventoryCarrier>();
-        if (newCarrier == null || newCarrier == _carrier) return;
-
-        _carrier = newCarrier;
-
-        foreach (WorldItem wi in Resources.FindObjectsOfTypeAll<WorldItem>())
-        {
-            if (wi.IsHeldByPlayer)
-                _carrier.RegisterPickedUpItem(wi.itemData, wi);
-        }
-    }
-
-    void InitializeSlots()
-    {
-        _slots.Clear();
-        for (int i = 0; i < maxSlots; i++)
-            _slots.Add(new InventorySlot());
+        inventoryCanvas.SetActive(alwaysShowInventory || _inventoryOpen);
     }
 
     void SetupInput()
     {
         if (InputManager.Instance == null) return;
-
         _toggleInventoryAction = InputManager.Instance.FindAction(toggleActionName);
-
         if (_toggleInventoryAction == null)
         {
             var map = InputManager.Instance.inputActions?.FindActionMap("Gameplay");
@@ -140,7 +194,6 @@ public class InventoryManager : MonoBehaviour, ISaveable
 
     void Update()
     {
-        if (_carrier == null) FindCarrier();
         if (PauseManager.IsPaused) return;
         HandleInput();
     }
@@ -190,10 +243,8 @@ public class InventoryManager : MonoBehaviour, ISaveable
     void ToggleInventory()
     {
         if (alwaysShowInventory) return;
-
         _inventoryOpen = !_inventoryOpen;
         if (inventoryCanvas != null) inventoryCanvas.SetActive(_inventoryOpen);
-
         if (pauseTimeWhenOpen)
         {
             if (_inventoryOpen) { _previousTimeScale = Time.timeScale; Time.timeScale = 0f; }
@@ -204,7 +255,6 @@ public class InventoryManager : MonoBehaviour, ISaveable
     void CycleSlot(int direction)
     {
         if (GetFilledSlotCount() == 0) return;
-
         int attempts = 0;
         do
         {
@@ -214,7 +264,6 @@ public class InventoryManager : MonoBehaviour, ISaveable
             if (showEmptySlots) break;
         }
         while (attempts < maxSlots);
-
         UpdateActiveSlot();
     }
 
@@ -225,7 +274,6 @@ public class InventoryManager : MonoBehaviour, ISaveable
             var filledIndices = new List<int>();
             for (int i = 0; i < _slots.Count; i++)
                 if (!_slots[i].IsEmpty) filledIndices.Add(i);
-
             if (index >= filledIndices.Count) return;
             int target = filledIndices[index];
             _activeSlotIndex = (_activeSlotIndex == target) ? -1 : target;
@@ -235,7 +283,6 @@ public class InventoryManager : MonoBehaviour, ISaveable
             if (index >= maxSlots) return;
             _activeSlotIndex = (_activeSlotIndex == index) ? -1 : index;
         }
-
         UpdateActiveSlot();
     }
 
@@ -247,7 +294,7 @@ public class InventoryManager : MonoBehaviour, ISaveable
 
     void UpdateHeldItem()
     {
-        if (_carrier == null) { FindCarrier(); if (_carrier == null) { IsHoldingInventoryItem = false; return; } }
+        if (_carrier == null) { IsHoldingInventoryItem = false; return; }
 
         if (_activeSlotIndex < 0 || _activeSlotIndex >= _slots.Count)
         {
@@ -311,7 +358,6 @@ public class InventoryManager : MonoBehaviour, ISaveable
     public void DropItem(int slotIndex)
     {
         if (slotIndex < 0 || slotIndex >= _slots.Count) return;
-
         InventorySlot slot = _slots[slotIndex];
         if (slot.IsEmpty) return;
 
@@ -335,10 +381,16 @@ public class InventoryManager : MonoBehaviour, ISaveable
 
     public int GetActiveSlotIndex() => _activeSlotIndex;
 
+    void InitializeSlots()
+    {
+        _slots.Clear();
+        for (int i = 0; i < maxSlots; i++)
+            _slots.Add(new InventorySlot());
+    }
+
     void PopulateSlotUI()
     {
         if (slotContainer == null || slotPrefab == null) return;
-
         foreach (var ui in _slotUIElements)
             if (ui != null) Destroy(ui.gameObject);
         _slotUIElements.Clear();
@@ -398,20 +450,23 @@ public class InventoryManager : MonoBehaviour, ISaveable
             {
                 SaveManager.Set($"{SaveID}/Slot{i}/ItemName", slot.itemData.name);
                 SaveManager.SetInt($"{SaveID}/Slot{i}/Quantity", slot.quantity);
+
+                SaveManager.SetInt($"{SaveID}/Slot{i}/IDCount", slot.worldItemIDs.Count);
+                for (int j = 0; j < slot.worldItemIDs.Count; j++)
+                    SaveManager.Set($"{SaveID}/Slot{i}/ID{j}", slot.worldItemIDs[j]);
             }
             else
             {
                 SaveManager.DeleteKey($"{SaveID}/Slot{i}/ItemName");
                 SaveManager.DeleteKey($"{SaveID}/Slot{i}/Quantity");
+                SaveManager.DeleteKey($"{SaveID}/Slot{i}/IDCount");
             }
         }
-
         SaveManager.SetInt($"{SaveID}/ActiveSlot", _activeSlotIndex);
     }
 
     public void OnLoad()
     {
-
         InitializeSlots();
         _carrier?.ClearHeldItem();
         IsHoldingInventoryItem = false;
@@ -426,6 +481,15 @@ public class InventoryManager : MonoBehaviour, ISaveable
                 {
                     _slots[i].itemData = data;
                     _slots[i].quantity = SaveManager.GetInt($"{SaveID}/Slot{i}/Quantity", 1);
+
+                    int idCount = SaveManager.GetInt($"{SaveID}/Slot{i}/IDCount", 0);
+                    _slots[i].worldItemIDs.Clear();
+                    for (int j = 0; j < idCount; j++)
+                    {
+                        string id = SaveManager.Get($"{SaveID}/Slot{i}/ID{j}", "");
+                        if (!string.IsNullOrEmpty(id))
+                            _slots[i].worldItemIDs.Add(id);
+                    }
                 }
             }
         }
@@ -434,32 +498,18 @@ public class InventoryManager : MonoBehaviour, ISaveable
             ? SaveManager.GetInt($"{SaveID}/ActiveSlot", -1) : -1;
 
         UpdateSlotVisuals();
-        StartCoroutine(UpdateHeldItemDeferred());
-    }
-
-    IEnumerator UpdateHeldItemDeferred()
-    {
-
-        yield return null;
-        FindCarrier();
-        UpdateHeldItem();
     }
 
     public void ResetInventory()
     {
-        _carrier?.ClearHeldItem();
         if (_carrier != null)
+        {
+            _carrier.ClearHeldItem();
             _carrier.ClearSourceMap();
-
+        }
         _activeSlotIndex = -1;
         IsHoldingInventoryItem = false;
         InitializeSlots();
         UpdateSlotVisuals();
-
-        foreach (WorldItem wi in Resources.FindObjectsOfTypeAll<WorldItem>())
-        {
-            if (wi.gameObject.scene.name == "DontDestroyOnLoad")
-                Destroy(wi.gameObject);
-        }
     }
 }

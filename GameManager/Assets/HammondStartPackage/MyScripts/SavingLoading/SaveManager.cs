@@ -15,6 +15,7 @@ public interface ISaveable
 public class SaveManager : MonoBehaviour
 {
     public static SaveManager Instance { get; private set; }
+    public static event System.Action OnLoadComplete;
 
     public int maxSaveSlots = 3;
     public int defaultSlot = 0;
@@ -37,8 +38,7 @@ public class SaveManager : MonoBehaviour
     static Dictionary<string, string> _data = new Dictionary<string, string>();
     static List<ISaveable> _saveables = new List<ISaveable>();
     static bool _isLoadingScene = false;
-    public static int GetRestCount() => GetInt("_meta/restCount", 0);
-    public static void IncrementRestCount() => SetInt("_meta/restCount", GetRestCount() + 1);
+
     Coroutine _feedbackRoutine;
     bool _saveCooldownActive;
 
@@ -108,6 +108,8 @@ public class SaveManager : MonoBehaviour
 
         if (debugLogging)
             Debug.Log($"loaded scene '{sceneName}', slot {ActiveSlot}, {snapshot.Length} saveables");
+
+        OnLoadComplete?.Invoke();
     }
 
     public static void SetActiveSlot(int slot)
@@ -131,6 +133,7 @@ public class SaveManager : MonoBehaviour
         if (Instance != null && Instance.debugLogging)
             Debug.Log($"switched to slot {slot}. {_data.Count} keys");
     }
+
     public static bool SlotHasData(int slot) =>
         System.IO.File.Exists(SlotPath(slot));
 
@@ -144,7 +147,7 @@ public class SaveManager : MonoBehaviour
         var wrapper = JsonUtility.FromJson<SaveWrapper>(json);
         var dict = wrapper.ToDictionary();
 
-        if (dict.Count == 0) return "Empty"; 
+        if (dict.Count == 0) return "Empty";
 
         if (dict.TryGetValue("_meta/timestamp", out string timestamp))
             return $"Slot {slot + 1}  {timestamp}";
@@ -248,6 +251,9 @@ public class SaveManager : MonoBehaviour
     {
         _saveables.Remove(saveable);
     }
+
+    public static int GetRestCount() => GetInt("_meta/restCount", 0);
+    public static void IncrementRestCount() => SetInt("_meta/restCount", GetRestCount() + 1);
 
     void OnSaveButtonPressed()
     {
@@ -416,18 +422,6 @@ public class SaveManager : MonoBehaviour
     {
         InventoryManager.Instance?.ResetInventory();
 
-        foreach (WorldItem wi in Resources.FindObjectsOfTypeAll<WorldItem>())
-        {
-            if (wi == null) continue;
-            if (wi.gameObject.scene.name == "DontDestroyOnLoad")
-                Object.Destroy(wi.gameObject);
-        }
-
-        foreach (WorldItem wi in Resources.FindObjectsOfTypeAll<WorldItem>())
-        {
-            if (wi == null) continue;
-            wi.ResetToWorld();
-        }
 
         string activeScene = SceneManager.GetActiveScene().name;
         foreach (ISaveable saveable in _saveables.ToArray())

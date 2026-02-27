@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    public static event System.Action<GameObject> OnPlayerSpawned;
+
     [Header("character select data")]
     [Tooltip("must be the same so asset referenced by characterSelectManager")]
     public CharacterCustomizationSave customizationSave;
@@ -55,6 +57,8 @@ public class SpawnManager : MonoBehaviour
             saveable.OnLoad();
 
         SceneTransitionData.Clear();
+
+        OnPlayerSpawned?.Invoke(player);
     }
 
     GameObject ResolvePrefab()
@@ -122,11 +126,9 @@ public class SpawnManager : MonoBehaviour
 
         List<int> indices = customizationSave.selectedWeaponIndices;
 
-        Debug.Log($"[spawnManager] weapon indices count: {indices?.Count ?? -1}");
-
         if (indices == null || indices.Count == 0)
         {
-            Debug.LogWarning("[spawnManager] no weapon indices saved — did you select weapons in character select?");
+            Debug.LogWarning("[spawnManager] no weapon indices saved.");
             return;
         }
 
@@ -148,7 +150,6 @@ public class SpawnManager : MonoBehaviour
             weaponGO.transform.SetParent(socket, false);
             weaponGO.transform.localPosition = Vector3.zero;
             spawnedWeapons.Add(weaponGO);
-            Debug.Log($"[spawnManager] spawned weapon: {weaponData.weaponName}");
         }
 
         WeaponSwitch ws = player.GetComponentInChildren<WeaponSwitch>();
@@ -163,7 +164,6 @@ public class SpawnManager : MonoBehaviour
             foreach (GameObject w in spawnedWeapons)
                 w.SetActive(false);
             ws.EquipLoadout(spawnedWeapons.ToArray(), 0);
-            Debug.Log($"[spawnManager] equipLoadout called with {spawnedWeapons.Count} weapons.");
         }
     }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -6,11 +7,11 @@ public class InventorySlot
 {
     public InventoryItemData itemData;
     public int quantity;
+    public List<string> worldItemIDs = new List<string>();
 
     public bool IsEmpty => itemData == null || quantity <= 0;
 
     public InventorySlot() { }
-
     public InventorySlot(InventoryItemData data, int qty)
     {
         itemData = data;
@@ -21,6 +22,7 @@ public class InventorySlot
     {
         itemData = null;
         quantity = 0;
+        worldItemIDs.Clear();
     }
 
     public bool CanStack(InventoryItemData data)

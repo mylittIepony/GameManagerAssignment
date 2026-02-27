@@ -28,7 +28,8 @@ public class InventoryCarrier : MonoBehaviour
     float _wobbleTime;
     InputAction _dropAction;
 
-    readonly Dictionary<InventoryItemData, List<WorldItem>> _itemSourceMap = new Dictionary<InventoryItemData, List<WorldItem>>();
+    readonly Dictionary<InventoryItemData, List<WorldItem>> _itemSourceMap
+        = new Dictionary<InventoryItemData, List<WorldItem>>();
 
     Transform ResolvedCarryPoint
     {
@@ -55,10 +56,8 @@ public class InventoryCarrier : MonoBehaviour
     void Update()
     {
         if (_dropAction == null) CacheDropAction();
-
         if (_dropAction != null && _dropAction.WasPressedThisFrame())
             InventoryManager.Instance?.DropActiveItem();
-
         ApplyWobble();
     }
 
@@ -71,6 +70,10 @@ public class InventoryCarrier : MonoBehaviour
         _heldVisual.transform.localPosition = pos;
     }
 
+    public void ClearSourceMap()
+    {
+        _itemSourceMap.Clear();
+    }
 
     public void RegisterPickedUpItem(InventoryItemData data, WorldItem source)
     {
@@ -127,11 +130,9 @@ public class InventoryCarrier : MonoBehaviour
 
         if (_itemSourceMap.TryGetValue(itemData, out List<WorldItem> list) && list.Count > 0)
         {
-
             WorldItem target = list[list.Count - 1];
             list.RemoveAt(list.Count - 1);
             if (list.Count == 0) _itemSourceMap.Remove(itemData);
-
             if (target != null)
                 target.DropTo(dropPos, force);
         }
@@ -145,10 +146,5 @@ public class InventoryCarrier : MonoBehaviour
         if (swapVFXPrefab == null || point == null) return;
         GameObject vfx = Instantiate(swapVFXPrefab, point.position, point.rotation);
         Destroy(vfx, vfxLifetime);
-    }
-
-    public void ClearSourceMap()
-    {
-        _itemSourceMap.Clear();
     }
 }
