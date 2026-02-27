@@ -8,8 +8,8 @@ OcclusionCullingSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: 00000000000000000000000000000000
-  m_OcclusionCullingData: {fileID: 0}
+  m_SceneGUID: 294d04a5fd631fe49ba905a3432bd0c3
+  m_OcclusionCullingData: {fileID: 36300000, guid: 55fbf861f65e63748a7152cba251d0a4, type: 2}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -893,59 +893,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7577002076852444859, guid: cdaa796b1be10ad4eb494967d07bf1db, type: 3}
   m_PrefabInstance: {fileID: 200379518}
   m_PrefabAsset: {fileID: 0}
---- !u!21 &212118391
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Height Fog Global
-  m_Shader: {fileID: 4800000, guid: 3a7ef1b66bafb7a448a880ef76d2e6e6, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _RECEIVESHADOWS_OFF
-  - _SURFACE_TYPE_TRANSPARENT
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3001
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _AddPrecomputedVelocity: 1
-    - _AlphaCutoff: 0.5
-    - _Banner: 1
-    - _FogCameraMode: 0
-    - _HeightFogGlobal: 1
-    - _IsHeightFogShader: 1
-    - _QueueControl: -1
-    - _QueueOffset: 0
-    - _ReceiveShadows: 0
-    - _XRMotionVectorsPass: 1
-    m_Colors:
-    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1001 &239360550
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -959,6 +906,10 @@ PrefabInstance:
       value: Common
       objectReference: {fileID: 0}
     - target: {fileID: 2162979181904339133, guid: c1ec304d1ba566b4fa75cd817beaf9eb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162979181904339133, guid: c1ec304d1ba566b4fa75cd817beaf9eb, type: 3}
       propertyPath: highQuality
       value: 
       objectReference: {fileID: 11400000, guid: f993741e885bfe74d9193b7edad47c33, type: 2}
@@ -966,6 +917,14 @@ PrefabInstance:
       propertyPath: mediumQuality
       value: 
       objectReference: {fileID: 11400000, guid: 43ffdaffe2dff9b48a73d25121d0ca9b, type: 2}
+    - target: {fileID: 2162979181904339133, guid: c1ec304d1ba566b4fa75cd817beaf9eb, type: 3}
+      propertyPath: defaultRenderScale
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2162979181904339133, guid: c1ec304d1ba566b4fa75cd817beaf9eb, type: 3}
+      propertyPath: defaultQualityLevel
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4571456260387789676, guid: c1ec304d1ba566b4fa75cd817beaf9eb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 53.50986
@@ -1308,7 +1267,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 212118391}
+  - {fileID: 615772293}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2028,6 +1987,59 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5658718409849304503, guid: 9360a15bfbb324e449fbafe783c8b235, type: 3}
   m_PrefabInstance: {fileID: 605669931}
   m_PrefabAsset: {fileID: 0}
+--- !u!21 &615772293
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Height Fog Global
+  m_Shader: {fileID: 4800000, guid: 3a7ef1b66bafb7a448a880ef76d2e6e6, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _RECEIVESHADOWS_OFF
+  - _SURFACE_TYPE_TRANSPARENT
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3001
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AddPrecomputedVelocity: 1
+    - _AlphaCutoff: 0.5
+    - _Banner: 1
+    - _FogCameraMode: 0
+    - _HeightFogGlobal: 1
+    - _IsHeightFogShader: 1
+    - _QueueControl: -1
+    - _QueueOffset: 0
+    - _ReceiveShadows: 0
+    - _XRMotionVectorsPass: 1
+    m_Colors:
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1 &627771932
 GameObject:
   m_ObjectHideFlags: 0

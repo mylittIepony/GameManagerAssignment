@@ -92,14 +92,15 @@ public class GraphicsSettingsUser : MonoBehaviour
     {
         int tier = DetectHardwareTier();
 
-        SetQualityPreset(tier);
+     //   SetRenderScale(tier == 0 ? 0.75f : tier == 1 ? 0.85f : 1f);
         SetShadowQuality(tier);
-        SetTextureQuality(tier);
         SetAntiAliasing(tier);
-        SetRenderScale(tier == 0 ? 0.75f : tier == 1 ? 0.85f : 1f);
+        SetTextureQuality(tier);
         SetPostProcessing(tier >= 1);
         SetTargetFramerate(defaultTargetFPS);
         SetVSync(defaultVSync);
+
+        SetQualityPreset(tier);
 
         SetResolution(Screen.currentResolution.width, Screen.currentResolution.height, Screen.fullScreenMode);
 
@@ -133,16 +134,15 @@ public class GraphicsSettingsUser : MonoBehaviour
 
     void RestoreAllSettings()
     {
-
-        ApplyQualityPreset(PlayerPrefs.GetInt(KeyQuality, defaultQualityLevel));
-
         ApplyShadowQuality(PlayerPrefs.GetInt(KeyShadows, defaultShadowQuality));
         ApplyTextureQuality(PlayerPrefs.GetInt(KeyTextures, defaultTextureQuality));
         ApplyAntiAliasing(PlayerPrefs.GetInt(KeyAA, defaultAntiAliasing));
-        ApplyRenderScale(PlayerPrefs.GetFloat(KeyRenderScale, defaultRenderScale));
+      //  ApplyRenderScale(PlayerPrefs.GetFloat(KeyRenderScale, defaultRenderScale));
         ApplyPostProcessing(PlayerPrefs.GetInt(KeyPostProcessing, defaultPostProcessing ? 1 : 0) == 1);
         ApplyVSync(PlayerPrefs.GetInt(KeyVSync, defaultVSync ? 1 : 0) == 1);
         ApplyTargetFramerate(PlayerPrefs.GetInt(KeyFPS, defaultTargetFPS));
+
+        ApplyQualityPreset(PlayerPrefs.GetInt(KeyQuality, defaultQualityLevel));
 
         int w = PlayerPrefs.GetInt(KeyResWidth, Screen.currentResolution.width);
         int h = PlayerPrefs.GetInt(KeyResHeight, Screen.currentResolution.height);
@@ -185,6 +185,8 @@ public class GraphicsSettingsUser : MonoBehaviour
         Save();
     }
 
+
+    /*
     public void SetRenderScale(float scale)
     {
         scale = Mathf.Clamp(scale, 0.5f, 2f);
@@ -192,6 +194,8 @@ public class GraphicsSettingsUser : MonoBehaviour
         PlayerPrefs.SetFloat(KeyRenderScale, scale);
         Save();
     }
+
+    */
 
     public void SetPostProcessing(bool enabled)
     {
@@ -257,7 +261,13 @@ public class GraphicsSettingsUser : MonoBehaviour
         };
 
         if (asset != null)
+        {
             QualitySettings.renderPipeline = asset;
+
+          //  ApplyRenderScale(CurrentRenderScale);
+            ApplyShadowQuality(CurrentShadowQuality);
+            ApplyAntiAliasing(CurrentAntiAliasing);
+        }
     }
 
     void ApplyShadowQuality(int quality)
@@ -306,6 +316,8 @@ public class GraphicsSettingsUser : MonoBehaviour
         };
     }
 
+    /*
+
     void ApplyRenderScale(float scale)
     {
         CurrentRenderScale = scale;
@@ -315,6 +327,8 @@ public class GraphicsSettingsUser : MonoBehaviour
 
         urp.renderScale = scale;
     }
+
+    */
 
     void ApplyPostProcessing(bool enabled)
     {
@@ -450,7 +464,7 @@ public class GraphicsSettingsUser : MonoBehaviour
         slider.minValue = 0.5f;
         slider.maxValue = 2f;
         slider.value = CurrentRenderScale;
-        slider.onValueChanged.AddListener(SetRenderScale);
+       // slider.onValueChanged.AddListener(SetRenderScale);
     }
 
     public void SetupPostProcessingToggle(UnityEngine.UI.Toggle toggle)
@@ -487,7 +501,7 @@ public class GraphicsSettingsUser : MonoBehaviour
 
     void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
     {
-        ApplyRenderScale(CurrentRenderScale);
+       // ApplyRenderScale(CurrentRenderScale);
         ApplyShadowQuality(CurrentShadowQuality);
         ApplyAntiAliasing(CurrentAntiAliasing);
         ApplyPostProcessing(CurrentPostProcessing);

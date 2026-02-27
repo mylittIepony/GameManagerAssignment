@@ -186,7 +186,7 @@ public class SettingsPanel : MonoBehaviour
             renderScaleSlider.SetValueWithoutNotify(gfx.CurrentRenderScale);
             renderScaleSlider.onValueChanged.AddListener(v =>
             {
-                gfx.SetRenderScale(v);
+             //   gfx.SetRenderScale(v);
                 if (renderScaleLabel != null)
                     renderScaleLabel.text = $"{Mathf.RoundToInt(v * 100)}%";
             });
