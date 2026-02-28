@@ -11,16 +11,25 @@ public class ForeignDropSpawner : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == "Title") return;
-
         foreach (string id in ForeignDropRegistry.GetAll())
         {
             string prefix = $"ForeignDrop/WorldItem/{id}";
-
             string itemScene = SaveManager.Get($"{prefix}/Scene", "");
             if (itemScene != scene.name) continue;
-
             bool pickedUp = SaveManager.GetBool($"{prefix}/PickedUp", false);
             if (pickedUp) continue;
+
+            bool alreadyExists = false;
+            foreach (WorldItem wi in Resources.FindObjectsOfTypeAll<WorldItem>())
+            {
+                if (wi != null && wi.uniqueID == id &&
+                    wi.gameObject.scene.name == scene.name)
+                {
+                    alreadyExists = true;
+                    break;
+                }
+            }
+            if (alreadyExists) continue;
 
             SpawnItem(id, prefix, scene);
         }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -46,7 +45,7 @@ public class InventoryManager : MonoBehaviour, ISaveable
 
         InitializeSlots();
         SetupInput();
-        SaveManager.Register(this);
+        SaveManager.Register(this, "__persistent");
 
         SceneManager.sceneLoaded += OnSceneLoaded;
         SpawnManager.OnPlayerSpawned += OnPlayerSpawned;
@@ -80,10 +79,18 @@ public class InventoryManager : MonoBehaviour, ISaveable
         foreach (WorldItem wi in Resources.FindObjectsOfTypeAll<WorldItem>())
         {
             if (wi == null || string.IsNullOrEmpty(wi.uniqueID)) continue;
-            if (!wi.IsHeldByPlayer) continue; 
-            liveItems[wi.uniqueID] = wi;
+            if (!wi.IsHeldByPlayer) continue;
 
+            if (liveItems.TryGetValue(wi.uniqueID, out WorldItem existing))
+            {
+                Debug.LogWarning($"[inv] duplicate held worlditem '{wi.uniqueID}' destroying extra");
+                Destroy(wi.gameObject);
+                continue;
+            }
+
+            liveItems[wi.uniqueID] = wi;
         }
+
         for (int i = 0; i < _slots.Count; i++)
         {
             InventorySlot slot = _slots[i];
@@ -92,10 +99,25 @@ public class InventoryManager : MonoBehaviour, ISaveable
             foreach (string id in slot.worldItemIDs)
             {
                 if (liveItems.ContainsKey(id)) continue;
-                string nativeKey = $"{SaveManager.Get($"WorldItemHome/{id}", "")}/WorldItem/{id}";
-                if (SaveManager.GetBool($"{nativeKey}/PickedUp", false)) continue;
 
                 string homeScene = SaveManager.Get($"WorldItemHome/{id}", "");
+                string nativeKey = $"{homeScene}/WorldItem/{id}";
+                string foreignKey = $"ForeignDrop/WorldItem/{id}";
+
+                bool confirmedPickedUp = SaveManager.GetBool($"{nativeKey}/PickedUp", false)
+                                      || SaveManager.GetBool($"{foreignKey}/PickedUp", false);
+
+                if (!confirmedPickedUp) continue;
+
+     
+                if (string.IsNullOrEmpty(homeScene))
+                    homeScene = SaveManager.Get($"{foreignKey}/HomeScene", "");
+
+                if (string.IsNullOrEmpty(homeScene))
+                {
+                    Debug.LogWarning($"[inv] cant't respawn ghost for '{id}'  no homeScene found");
+                    continue;
+                }
 
                 GameObject go = Instantiate(slot.itemData.worldPrefab);
                 go.SetActive(false);
@@ -124,7 +146,6 @@ public class InventoryManager : MonoBehaviour, ISaveable
         Debug.Log($"[inv] onloadcomplete live:{liveItems.Count} slots filled:{GetFilledSlotCount()}");
         UpdateHeldItem();
     }
-
     public void TrackWorldItemInSlot(InventoryItemData data, string uniqueID)
     {
         for (int i = 0; i < _slots.Count; i++)

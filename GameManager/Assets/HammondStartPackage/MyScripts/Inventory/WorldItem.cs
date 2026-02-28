@@ -56,12 +56,12 @@ public class WorldItem : MonoBehaviour, ISaveable
         _pickedUp = true;
         _isInWorld = false;
         RefreshSaveID();
-        SaveManager.Register(this);
+      
     }
 
+ 
     void Awake()
     {
-
         if (_pickedUp) return;
 
         _homeScene = gameObject.scene.name;
@@ -74,33 +74,41 @@ public class WorldItem : MonoBehaviour, ISaveable
             _isForeignDrop = true;
 
         if (string.IsNullOrEmpty(uniqueID))
-        {
-            string baseID = $"{gameObject.name}_{_homeScene}_{_originalPosition.x:F2}_{_originalPosition.y:F2}_{_originalPosition.z:F2}";
-            string candidate = baseID;
-            int suffix = 0;
-            foreach (WorldItem other in Resources.FindObjectsOfTypeAll<WorldItem>())
-            {
-                if (other == this || other == null) continue;
-                if (other.uniqueID == candidate)
-                {
-                    suffix++;
-                    candidate = $"{baseID}_{suffix}";
-                }
-            }
-            uniqueID = candidate;
-        }
+            GenerateUniqueID();
 
-        SaveManager.Register(this);
     }
 
     void OnDestroy()
     {
-        SaveManager.Unregister(this);
+
         UnsubscribeInteract();
     }
 
     void OnEnable() => SubscribeInteract();
     void OnDisable() => UnsubscribeInteract();
+
+    void GenerateUniqueID()
+    {
+        string baseID = $"{gameObject.name}_{_homeScene}_{_originalPosition.x:F2}_{_originalPosition.y:F2}_{_originalPosition.z:F2}";
+        string candidate = baseID;
+        int suffix = 0;
+
+        foreach (WorldItem other in Resources.FindObjectsOfTypeAll<WorldItem>())
+        {
+            if (other == this || other == null) continue;
+
+            if (other.gameObject.scene.name == "DontDestroyOnLoad" && !other.IsHeldByPlayer)
+                continue;
+
+            if (other.uniqueID == candidate)
+            {
+                suffix++;
+                candidate = $"{baseID}_{suffix}";
+            }
+        }
+
+        uniqueID = candidate;
+    }
 
     void SubscribeInteract()
     {
@@ -136,6 +144,7 @@ public class WorldItem : MonoBehaviour, ISaveable
         if (other.CompareTag(playerTag)) _playerInRange = false;
     }
 
+
     void TryPickup()
     {
         if (InventoryManager.Instance == null || itemData == null) return;
@@ -159,6 +168,8 @@ public class WorldItem : MonoBehaviour, ISaveable
         gameObject.SetActive(false);
         SaveManager.ForceSave();
     }
+
+
 
     public void DropTo(Vector3 position, Vector3 force)
     {
@@ -233,6 +244,8 @@ public class WorldItem : MonoBehaviour, ISaveable
             col.enabled = true;
     }
 
+
+
     public void OnSave()
     {
         if (_pickedUp)
@@ -263,10 +276,13 @@ public class WorldItem : MonoBehaviour, ISaveable
     public void OnLoad()
     {
         if (this == null || gameObject == null) return;
+        if (spawnedAsForeignDrop) { spawnedAsForeignDrop = false; return; }
 
-        if (spawnedAsForeignDrop)
+        if (gameObject.scene.name == "DontDestroyOnLoad")
         {
-            spawnedAsForeignDrop = false;
+            _pickedUp = true;
+            _isInWorld = false;
+            gameObject.SetActive(false);
             return;
         }
 
@@ -289,10 +305,7 @@ public class WorldItem : MonoBehaviour, ISaveable
             }
             else
             {
-                if (gameObject.scene.name == "DontDestroyOnLoad")
-                    Destroy(gameObject);
-                else
-                    gameObject.SetActive(false);
+                gameObject.SetActive(false);
             }
             return;
         }
@@ -334,23 +347,21 @@ public class WorldItem : MonoBehaviour, ISaveable
 
         if (pickedUpVal)
         {
-            foreach (WorldItem other in Resources.FindObjectsOfTypeAll<WorldItem>())
+            if (gameObject.scene.name != "DontDestroyOnLoad")
             {
-                if (other != this && other.uniqueID == uniqueID && other.IsHeldByPlayer)
-                {
-                    Destroy(gameObject);
-                    return;
-                }
+                gameObject.SetActive(false);
+                return;
             }
+
             _pickedUp = true;
             _isInWorld = false;
-            DontDestroyOnLoad(gameObject);
-            gameObject.SetActive(false);
             return;
         }
 
+
         if (gameObject.scene.name == "DontDestroyOnLoad")
         {
+        
             Destroy(gameObject);
             return;
         }
